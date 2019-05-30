@@ -20,10 +20,10 @@ public:
 	//ID var name can be accessed in nodeName,leaf node
 	//OPERATOR op type can be accessed in nodeName, has 2 children(CONSTANT | ID | ARRAY | OPERATOR | FUN_CALL)*2
 	//PROGRAM root node,has one child DECLARATION
-	//DECLRATION has 1 or 2 children(DECLARATION | VAR_DECLARATION | VAR_DECALRATION_WITH_INITIAL | VAR_ARRAY_DECALRATION)*1/2
-	//VAR_DECALRATION has 2 children(TYPE + ID)
+	//DECLARATION has 1 or 2 children(DECLARATION | VAR_DECLARATION | VAR_DECALRATION_WITH_INITIAL | VAR_ARRAY_DECALRATION)*1/2
+	//VAR_DECLRATION has 2 children(TYPE + ID)
 	//VAR_DECLARATION_WITH_INITIAL has 3 children(TYPE + ID + (OPERATOR|CONSTANT|ID|ARRAY|FUN_CALL))
-	//VAR_ARRAY_DECALRATION has 3 children(TYPE + ID + CONSTANT)
+	//VAR_ARRAY_DECLRATION has 3 children(TYPE + ID + CONSTANT)
 	//TYPE value can be accessed in nodeName,leaf node
 	//FUN_DECLARATION has 3 children (TYPE + ID + (PARAMS|VOID))
 	//FUN_DEFINITION 4 children (TYPE + ID + (PARAMS|PARAM|VOID) + STATEMENTS)

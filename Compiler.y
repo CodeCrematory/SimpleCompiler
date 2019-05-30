@@ -45,7 +45,7 @@ Program:
 declaration_list:
 	declaration_list declaration {
 		$$.st = create_tree("declaration_list", 2, -1, $1.st, $2.st);
-		$$.st->nodeType = "DECALRATION";
+		$$.st->nodeType = "DECLARATION";
 		$$.lineNo = $1.lineNo;
 	}
 	| declaration {
@@ -71,7 +71,7 @@ declaration:
 var_declaration:
 	type_specifier IDENTIFIER ';' {
 		$$.st = create_tree("var_declaration", 2, -1, $1.st, $2.st);
-		$$.st->nodeType = "VAR_DECALRATION";
+		$$.st->nodeType = "VAR_DECLARATION";
 		$$.lineNo = $1.lineNo;
 		
 		//insert into symbol table
@@ -83,7 +83,7 @@ var_declaration:
 	| type_specifier IDENTIFIER '=' simple_expression ';' {
 		//TODO
 		$$.st = create_tree("var_declaration", 3, -1, $1.st, $2.st, $4.st);
-		$$.st->nodeType = "VAR_DECALRATION_WITH_INITIAL";
+		$$.st->nodeType = "VAR_DECLARATION_WITH_INITIAL";
 		$$.lineNo = $1.lineNo;
 		
 		//insert into symbol table
@@ -100,7 +100,7 @@ var_declaration:
 	}
 	| type_specifier IDENTIFIER '[' CONSTANT_INT ']' ';' {
 		$$.st = create_tree("var_declaration", 3, -1, $1.st, $2.st, $4.st);
-		$$.st->nodeType = "VAR_ARRAY_DECALRATION";
+		$$.st->nodeType = "VAR_ARRAY_DECLARATION";
 		$$.lineNo = $1.lineNo;
 		
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName+"*");
