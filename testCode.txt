@@ -1,7 +1,9 @@
 int testvar[10];
-int f(int a);
+int f(int a){
+return 0;
+}
 int main(int in){
-int count=1;
-count=f();
+int count=testvar;
+count=f(count);
 return 1;
 }

@@ -9,6 +9,8 @@ treeNode::treeNode(string name,int childNum, int lineNo){
 	this->nodeName = name;
 	this->childNum = childNum;
 	this->lineNum = lineNo;
+	
+	this->nodeType = name;
 }
 
 void treeNode::printTree(){

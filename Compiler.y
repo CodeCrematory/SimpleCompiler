@@ -38,11 +38,14 @@ void yyerror(const char*);
 Program:
 	declaration_list { 
 		root = create_tree("Program", 1, -1, $1.st);
+		
+		root->nodeType = "PROGRAM";
 	};
 
 declaration_list:
 	declaration_list declaration {
 		$$.st = create_tree("declaration_list", 2, -1, $1.st, $2.st);
+		$$.st->nodeType = "DECALRATION";
 		$$.lineNo = $1.lineNo;
 	}
 	| declaration {
@@ -68,6 +71,7 @@ declaration:
 var_declaration:
 	type_specifier IDENTIFIER ';' {
 		$$.st = create_tree("var_declaration", 2, -1, $1.st, $2.st);
+		$$.st->nodeType = "VAR_DECALRATION";
 		$$.lineNo = $1.lineNo;
 		
 		//insert into symbol table
@@ -79,6 +83,7 @@ var_declaration:
 	| type_specifier IDENTIFIER '=' simple_expression ';' {
 		//TODO
 		$$.st = create_tree("var_declaration", 3, -1, $1.st, $2.st, $4.st);
+		$$.st->nodeType = "VAR_DECALRATION_WITH_INITIAL";
 		$$.lineNo = $1.lineNo;
 		
 		//insert into symbol table
@@ -95,6 +100,7 @@ var_declaration:
 	}
 	| type_specifier IDENTIFIER '[' CONSTANT_INT ']' ';' {
 		$$.st = create_tree("var_declaration", 3, -1, $1.st, $2.st, $4.st);
+		$$.st->nodeType = "VAR_ARRAY_DECALRATION";
 		$$.lineNo = $1.lineNo;
 		
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName+"*");
@@ -106,25 +112,30 @@ var_declaration:
 type_specifier:
 	INT {
 		$$.st = create_tree("INT", 0, -1);
+		$$.st->nodeType = "TYPE";
 		$$.lineNo = $1.lineNo;
 	}
 	| VOID {
 		$$.st = create_tree("VOID", 0, -1);
+		$$.st->nodeType = "TYPE";
 		$$.lineNo = $1.lineNo;
 	}
 	| BOOL {
 		$$.st = create_tree("BOOL", 0, -1);
+		$$.st->nodeType = "TYPE";
 		$$.lineNo = $1.lineNo;
 	}
 	| DOUBLE {
 		$$.st = create_tree("DOUBLE", 0, -1);
+		$$.st->nodeType = "TYPE";
 		$$.lineNo = $1.lineNo;
 	};
 
 fun_declaration:
 	type_specifier IDENTIFIER '(' para_starts params ')' ';' {
 		//TODO
-		$$.st = create_tree("fun_declaration", 4, -1, $1.st, $2.st, $4.st, $6.st);
+		$$.st = create_tree("fun_declaration", 3, -1, $1.st, $2.st, $5.st);
+		$$.st->nodeType = "FUN_DECLARATION";
 		$$.lineNo = $1.lineNo;
 		
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName + " " + $5.funcParas);
@@ -140,6 +151,7 @@ fun_declaration:
 fun_definition:
 	type_specifier IDENTIFIER '(' para_starts params ')' compound_stmt {
 		$$.st = create_tree("fun_definition", 4, -1, $1.st, $2.st, $4.st, $6.st);
+		$$.st->nodeType = "FUN_DEFINITION";
 		$$.lineNo = $1.lineNo;
 		
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName + " " + $5.funcParas);
@@ -173,6 +185,8 @@ params:
 	}
 	| VOID {
 		$$.st = create_tree("VOID", 0, -1);
+		$$.st->nodeType = "VOID";
+		
 		$$.lineNo = $1.lineNo;
 		
 		$$.funcParas = "VOID";
@@ -181,6 +195,7 @@ params:
 params_list:
 	params_list ',' param {
 		$$.st = create_tree("params_list", 2, -1, $1.st, $3.st);
+		$$.st->nodeType = "PARAMS";
 		$$.lineNo = $1.lineNo;
 		
 		$$.funcParas = $1.funcParas + " " + $3.funcParas;
@@ -195,6 +210,7 @@ params_list:
 param:
 	type_specifier IDENTIFIER {
 		$$.st = create_tree("param", 2, -1, $1.st, $2.st);
+		$$.st->nodeType = "PARAM";
 		$$.lineNo = $1.lineNo;
 		
 		$$.funcParas = $1.st->nodeName;
@@ -203,6 +219,7 @@ param:
 	}
 	| type_specifier IDENTIFIER '[' ']' {
 		$$.st = create_tree("param_array", 2, -1, $1.st, $2.st);
+		$$.st->nodeType = "PARAM";
 		$$.lineNo = $1.lineNo;
 		
 		$$.funcParas = $1.st->nodeName + "*";
@@ -213,6 +230,7 @@ param:
 compound_stmt:
 	compound_stmt_start local_declarations statement_list compound_stmt_end {
 		$$.st = create_tree("compound_stmt",2,-1,$2.st,$3.st);
+		$$.st->nodeType = "COM_STATEMENTS";
 		$$.lineNo = $1.lineNo;	 
 		
 		$$.type = $3.type; 
@@ -242,6 +260,7 @@ local_declarations: /*可为空*/{
 	}
 	| local_declarations var_declaration {
 		$$.st = create_tree("local_declarations",2,-1,$1.st,$2.st);
+		$$.st->nodeType = "DECLARATION";
 		$$.lineNo = $1.lineNo;
 	};
 
@@ -252,6 +271,7 @@ statement_list: /*可为空*/{
 	}
 	| statement_list statement {
 		$$.st = create_tree("statement_list",2,-1,$1.st,$2.st);
+		$$.st->nodeType = "STATEMENTS";
 		$$.lineNo = $1.lineNo;
 		
 		if($1.type != "STATEMENT" && $2.type != "STATEMENT"){
@@ -316,6 +336,7 @@ expression_stmt:
 selection_stmt:
 	IF '(' expression ')' statement %prec LOWER_THAN_ELSE{
 		$$.st = create_tree("IF", 2, -1, $3.st, $5.st);
+		$$.st->nodeType = "IF";
 		$$.lineNo = $1.lineNo;
 		
 		if($3.type != "BOOL"){
@@ -325,6 +346,7 @@ selection_stmt:
 	}
 	| IF '(' expression ')' statement ELSE statement {
 		$$.st = create_tree("IF_ELSE", 3, -1, $3.st, $5.st, $7.st);
+		$$.st->nodeType = "IF_ELSE";
 		$$.lineNo = $1.lineNo;
 		
 		if($3.type != "BOOL"){
@@ -354,6 +376,7 @@ selection_stmt:
 iteration_stmt:
 	WHILE '(' expression ')' statement {
 		$$.st = create_tree("WHILE", 2, -1, $3.st, $5.st);
+		$$.st->nodeType = "WHILE";
 		$$.lineNo = $1.lineNo;
 		
 		if($3.type != "BOOL"){
@@ -366,12 +389,14 @@ iteration_stmt:
 return_stmt:
 	RETURN ';' {
 		$$.st = create_tree("RETURN", 0, -1);
+		$$.st->nodeType = "RETURN";
 		$$.lineNo = $1.lineNo;
 		
 		$$.type = "VOID";
 	}
 	| RETURN expression ';' {
 		$$.st = create_tree("RETURN", 1, -1, $2.st);
+		$$.st->nodeType = "RETURN";
 		$$.lineNo = $1.lineNo;
 		
 		$$.type = $2.type;
@@ -380,6 +405,7 @@ return_stmt:
 expression:
 	var '=' expression {
 		$$.st = create_tree("=", 2, -1, $1.st, $3.st);
+		$$.st->nodeType = "ASSIGNMENT";
 		$$.lineNo = $1.lineNo;
 		
 		if($1.type != $3.type){
@@ -414,6 +440,7 @@ var:
 	}
 	| IDENTIFIER '[' expression ']' {
 		$$.st = create_tree($1.st->nodeName, 1, -1, $3.st);
+		$$.st->nodeType = "ARRAY";
 		$$.lineNo = $1.lineNo;
 		
 		string buff;
@@ -444,6 +471,7 @@ var:
 simple_expression:
 	additive_expression REL_OP additive_expression {
 		$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
+		$$.st->nodeType = "OPERATOR";
 		$$.lineNo = $1.lineNo;
 		
 		if($1.type != $3.type){
@@ -464,6 +492,7 @@ simple_expression:
 additive_expression:
 	additive_expression ADD_OP term {
 		$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
+		$$.st->nodeType = "OPERATOR";
 		$$.lineNo = $1.lineNo;
 		
 		if($1.type != $3.type){
@@ -484,6 +513,7 @@ additive_expression:
 term:
 	term MUL_OP factor {
 		$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
+		$$.st->nodeType = "OPERATOR";
 		$$.lineNo = $1.lineNo;
 		
 		if($1.type != $3.type){
@@ -539,6 +569,7 @@ factor:
 call:
 	IDENTIFIER '(' args ')' {
 		$$.st = create_tree("call", 2, -1, $1.st, $3.st);
+		$$.st->nodeType = "FUN_CALL";
 		$$.lineNo = $1.lineNo;
 		
 		resState = symTable.findSymbol($1.st->nodeName);
@@ -577,6 +608,7 @@ call:
 
 args: /*可为空*/{
 		$$.st = create_tree("NO_ARGS", 0, -1);
+		$$.st->nodeType = "ARGS";
 		$$.type = "VOID";
 	}
 	| arg_list {
@@ -589,6 +621,7 @@ args: /*可为空*/{
 arg_list:
 	arg_list ',' expression {
 		$$.st = create_tree("arg_list", 2, -1, $1.st, $2.st);
+		$$.st->nodeType = "ARGS";
 		$$.lineNo = $1.lineNo;
 		
 		$$.type = $1.type + " " + $3.type;
@@ -616,12 +649,6 @@ int main(int argc,char* argv[]) {
 	yyparse();
 	
 	root->printTree();
-	
-	/*eval(root,0);	//输出语法分析树
-
-	Parser parser(root); //分析语法树
-
-	freeGramTree(root);*/
 
 	fclose(yyin);
 	return 0;

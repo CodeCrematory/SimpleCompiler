@@ -871,152 +871,157 @@ YY_RULE_SETUP
 { count(); 
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno;
-					yylval.st = create_tree(yytext, 0, yylineno);					
+					yylval.st = create_tree(yytext, 0, yylineno);
+					yylval.st->nodeType = "CONSTANT";			
 				  	return(CONSTANT_BOOL); 	}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 39 "Compiler.l"
+#line 40 "Compiler.l"
 { count();
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno;
-					yylval.st = create_tree(yytext, 0, yylineno);					
+					yylval.st = create_tree(yytext, 0, yylineno);
+					yylval.st->nodeType = "CONSTANT";				
 					return(CONSTANT_BOOL); 	}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 45 "Compiler.l"
+#line 47 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="+";  	return(ADD_OP); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 46 "Compiler.l"
+#line 48 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="-"; 	return(ADD_OP); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 47 "Compiler.l"
+#line 49 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="*"; 	return(MUL_OP); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 48 "Compiler.l"
+#line 50 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="/"; 	return(MUL_OP); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 49 "Compiler.l"
+#line 51 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="<"; 	return(REL_OP); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 50 "Compiler.l"
+#line 52 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent=">"; 	return(REL_OP); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 51 "Compiler.l"
+#line 53 "Compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('='); 	}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 52 "Compiler.l"
+#line 54 "Compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(';'); 	}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 53 "Compiler.l"
+#line 55 "Compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(','); 	}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 54 "Compiler.l"
+#line 56 "Compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('('); 	}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 55 "Compiler.l"
+#line 57 "Compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(')'); 	}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 56 "Compiler.l"
+#line 58 "Compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('['); 	}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 57 "Compiler.l"
+#line 59 "Compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(']'); 	}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 58 "Compiler.l"
+#line 60 "Compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('{'); 	}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 59 "Compiler.l"
+#line 61 "Compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('}'); 	}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 61 "Compiler.l"
+#line 63 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="<=";  	return(REL_OP);	}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 62 "Compiler.l"
+#line 64 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent=">=";  	return(REL_OP);	}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 63 "Compiler.l"
+#line 65 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="==";  	return(REL_OP);	}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 64 "Compiler.l"
+#line 66 "Compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="!=";  	return(REL_OP);	}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 66 "Compiler.l"
+#line 68 "Compiler.l"
 { count(); 
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno; 
 					yylval.st = create_tree(yytext, 0, yylineno);
+					yylval.st->nodeType = "ID";
 					return(IDENTIFIER);}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 72 "Compiler.l"
+#line 75 "Compiler.l"
 { count(); 
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno;
-					yylval.st = create_tree(yytext, 0, yylineno);					
+					yylval.st = create_tree(yytext, 0, yylineno);	
+					yylval.st->nodeType = "CONSTANT";				
 					return(CONSTANT_INT);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 78 "Compiler.l"
+#line 82 "Compiler.l"
 { count(); 
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno;
-					yylval.st = create_tree(yytext, 0, yylineno);					
+					yylval.st = create_tree(yytext, 0, yylineno);
+					yylval.st->nodeType = "CONSTANT";					
 					return(CONSTANT_DOUBLE);}
 	YY_BREAK
 case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
-#line 84 "Compiler.l"
+#line 89 "Compiler.l"
 { count();}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 86 "Compiler.l"
+#line 91 "Compiler.l"
 ECHO;
 	YY_BREAK
-#line 1019 "lex.yy.c"
+#line 1024 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2033,7 +2038,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 86 "Compiler.l"
+#line 91 "Compiler.l"
 
 int yywrap() {
 	return 1;
