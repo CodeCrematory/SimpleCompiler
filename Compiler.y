@@ -4,6 +4,7 @@
 #include <map>
 #include "tree.h"
 #include "table.h"
+#include "draw.h" 
 using namespace std;
 
 extern char *yytext;
@@ -464,7 +465,7 @@ var:
 		}
 		
 		if($3.type != "INT"){
-				cout << "[Compile Error] Line:" << $$.lineNo << " array index tyoe should be int but not " << $3.type << endl; 
+				cout << "[Compile Error] Line:" << $$.lineNo << " array index type should be int but not " << $3.type << endl; 
 		}
 	};
 
@@ -577,11 +578,15 @@ call:
 			cout << "[Compile Error] Line:" << $$.lineNo << " function " << $1.st->nodeName << " is not declared." << endl; 
 			$$.type = "UNDEFINED"; 
 		}
+		else if(funcDefined.find($1.st->nodeName) == funcDefined.end()){
+			cout << "[Compile Error] Line:" << $$.lineNo  << " "<< $1.st->nodeName << " is not a function." << endl; 
+			$$.type = "UNDEFINED"; 
+		}
 		else{
 			string resType = symTable.getSymbolType($1.st->nodeName);
 			
 			if(funcDefined[$1.st->nodeName] == false){
-				cout << "[Compile Error] Line:" << $$.lineNo << " function " << $1.st->nodeName << " is declared but not defined." << endl; 
+				cout << "[Compile Error] Line:" << $$.lineNo << " function " << $1.st->nodeName << " is not defined." << endl; 
 			}
 			
 			vector<string> splitType;
@@ -649,6 +654,12 @@ int main(int argc,char* argv[]) {
 	yyparse();
 	
 	root->printTree();
+	
+	ofstream out("a.gv");
+	out << "digraph AST {" << endl;
+	DrawTree(out, root, NULL, 0);
+	out << "}" << endl;
+	out.close();
 
 	fclose(yyin);
 	return 0;
