@@ -151,7 +151,7 @@ fun_declaration:
 
 fun_definition:
 	type_specifier IDENTIFIER '(' para_starts params ')' compound_stmt {
-		$$.st = create_tree("fun_definition", 4, -1, $1.st, $2.st, $4.st, $6.st);
+		$$.st = create_tree("fun_definition", 4, -1, $1.st, $2.st, $5.st, $7.st);
 		$$.st->nodeType = "FUN_DEFINITION";
 		$$.lineNo = $1.lineNo;
 		
@@ -163,7 +163,7 @@ fun_definition:
 		funcDefined[$2.st->nodeName]=true;
 		
 		if($7.type != $1.st->nodeName){
-			cout << "[Compile Error] Line:" << $$.lineNo << " return value type in statement is not " << $1.st->nodeName << endl; 
+			cout << "[Compile Error] Line: " << $$.lineNo << " return value type in statement is not " << $1.st->nodeName << endl; 
 		}
 	};
 
@@ -299,6 +299,8 @@ statement:
 	expression_stmt {
 		$$.st = $1.st;
 		$$.lineNo = $1.lineNo;
+		
+		$$.type = "STATEMENT"; 
 		
 	}
 	| compound_stmt {
@@ -624,7 +626,7 @@ args: /*可为空*/{
 
 arg_list:
 	arg_list ',' expression {
-		$$.st = create_tree("arg_list", 2, -1, $1.st, $2.st);
+		$$.st = create_tree("arg_list", 2, -1, $1.st, $3.st);
 		$$.st->nodeType = "ARGS";
 		$$.lineNo = $1.lineNo;
 		
@@ -652,7 +654,7 @@ int main(int argc,char* argv[]) {
 	
 	yyparse();
 	
-	root->printTree();
+	root->printTree2(0);
 	
 	ofstream out("a.gv");
 	out << "digraph AST {" << endl;

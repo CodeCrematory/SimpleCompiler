@@ -1,10 +1,12 @@
 int testvar[10];
+int count=0;
 double f(int a,int b){
-return 0.0;
+double count = 1.0;
+return count;
 }
 int main(int in){
 int count=testvar[5];
 double shit = 1.2;
-shit = shit(count);
+shit = f(count,1);
 return 1;
 }

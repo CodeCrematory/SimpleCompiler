@@ -13,6 +13,19 @@ treeNode::treeNode(string name,int childNum, int lineNo){
 	this->nodeType = name;
 }
 
+void treeNode::printTree2(int depth){
+	for(int i = 0;i<depth;i++){
+		cout << "\t";
+	}
+	cout << this->nodeName << ":" << this->nodeType << endl;
+	for(int i = 0;i < this->child.size();i++){
+		if(this->child[i]==NULL)
+			continue;
+		else
+			this->child[i]->printTree2(depth+1);
+	}
+}
+
 void treeNode::printTree(){
 	queue<treeNode*> nodes;
 	nodes.push(this);

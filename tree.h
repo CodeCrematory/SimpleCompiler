@@ -45,6 +45,7 @@ public:
 	
 	treeNode(string name, int childNum, int lineNo);
 	void printTree();
+	void printTree2(int depth);
 	~treeNode();
 };
 
@@ -55,7 +56,7 @@ public:
 	treeNode* st; //node of the tree, all terminal and non-terminal has the valid attr
 	int lineNo;	//the line of the token, all terminal and non-terminal has the valid attr
 	string tokenContent;//content of the token, ADD MUL REL-OP has the valid attr
-	string type;//cthe type of the variable, expression, function call,args, paras has the valid attr
+	string type;//cthe type of the variable, expression, function call,args, paras has the valid attr use for return check
 	string funcParas;//usd to collect function parameters types when function declaration
 	/*below used for code generation*/
 	string interCode;
