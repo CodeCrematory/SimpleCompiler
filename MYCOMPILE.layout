@@ -20,7 +20,7 @@ TopLine=1023
 LeftChar=1
 [Editors]
 Order=4,3,6,5,0,7
-Focused=0
+Focused=-1
 [Editor_4]
 CursorCol=63
 CursorRow=41

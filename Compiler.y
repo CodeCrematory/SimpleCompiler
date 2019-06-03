@@ -300,7 +300,6 @@ statement:
 		$$.st = $1.st;
 		$$.lineNo = $1.lineNo;
 		
-		$$.type = "STATEMENT";
 	}
 	| compound_stmt {
 		$$.st = $1.st;
