@@ -63,7 +63,7 @@
 
 /* Copy the first part of user declarations.  */
 /* Line 371 of yacc.c  */
-#line 1 "Compiler.y"
+#line 1 "compiler.y"
 
 #define YYSTYPE attributes
 #include <cstdio>
@@ -91,7 +91,7 @@ void yyerror(const char*);
 
 
 /* Line 371 of yacc.c  */
-#line 95 "Compiler.tab.c"
+#line 95 "compiler.tab.c"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -110,7 +110,7 @@ void yyerror(const char*);
 #endif
 
 /* In a future release of Bison, this section will be replaced
-   by #include "Compiler.tab.h".  */
+   by #include "compiler.tab.h".  */
 #ifndef YY_YY_COMPILER_TAB_H_INCLUDED
 # define YY_YY_COMPILER_TAB_H_INCLUDED
 /* Enabling traces.  */
@@ -175,7 +175,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 179 "Compiler.tab.c"
+#line 179 "compiler.tab.c"
 
 #ifdef short
 # undef short
@@ -490,11 +490,11 @@ static const yytype_uint16 yyrline[] =
 {
        0,    40,    40,    47,    52,    58,    62,    66,    73,    84,
      102,   114,   119,   124,   129,   136,   153,   172,   181,   187,
-     197,   204,   212,   221,   232,   241,   255,   259,   262,   268,
-     273,   299,   306,   312,   318,   324,   332,   336,   339,   349,
-     379,   392,   399,   408,   421,   429,   443,   474,   487,   495,
-     508,   516,   529,   537,   543,   549,   555,   560,   565,   572,
-     615,   620,   628,   635
+     197,   204,   212,   221,   233,   242,   256,   260,   263,   269,
+     274,   300,   307,   313,   319,   325,   333,   337,   340,   350,
+     380,   393,   400,   409,   422,   430,   444,   475,   488,   496,
+     509,   517,   530,   538,   544,   550,   556,   561,   566,   573,
+     616,   621,   629,   636
 };
 #endif
 
@@ -1465,7 +1465,7 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 40 "Compiler.y"
+#line 40 "compiler.y"
     { 
 		root = create_tree("Program", 1, -1, (yyvsp[(1) - (1)]).st);
 		
@@ -1475,7 +1475,7 @@ yyreduce:
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 47 "Compiler.y"
+#line 47 "compiler.y"
     {
 		(yyval).st = create_tree("declaration_list", 2, -1, (yyvsp[(1) - (2)]).st, (yyvsp[(2) - (2)]).st);
 		(yyval).st->nodeType = "DECLARATION";
@@ -1485,7 +1485,7 @@ yyreduce:
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 52 "Compiler.y"
+#line 52 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1494,7 +1494,7 @@ yyreduce:
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 58 "Compiler.y"
+#line 58 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1503,7 +1503,7 @@ yyreduce:
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 62 "Compiler.y"
+#line 62 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1512,7 +1512,7 @@ yyreduce:
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 66 "Compiler.y"
+#line 66 "compiler.y"
     {
 		//TODO
 		(yyval).st = (yyvsp[(1) - (1)]).st;
@@ -1522,7 +1522,7 @@ yyreduce:
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 73 "Compiler.y"
+#line 73 "compiler.y"
     {
 		(yyval).st = create_tree("var_declaration", 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(2) - (3)]).st);
 		(yyval).st->nodeType = "VAR_DECLARATION";
@@ -1538,10 +1538,10 @@ yyreduce:
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 84 "Compiler.y"
+#line 84 "compiler.y"
     {
 		//TODO
-		(yyval).st = create_tree("var_declaration", 3, -1, (yyvsp[(1) - (5)]).st, (yyvsp[(2) - (5)]).st, (yyvsp[(4) - (5)]).st);
+		(yyval).st = create_tree("var_declaration_with_initial", 3, -1, (yyvsp[(1) - (5)]).st, (yyvsp[(2) - (5)]).st, (yyvsp[(4) - (5)]).st);
 		(yyval).st->nodeType = "VAR_DECLARATION_WITH_INITIAL";
 		(yyval).lineNo = (yyvsp[(1) - (5)]).lineNo;
 		
@@ -1561,7 +1561,7 @@ yyreduce:
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 102 "Compiler.y"
+#line 102 "compiler.y"
     {
 		(yyval).st = create_tree("var_declaration", 3, -1, (yyvsp[(1) - (6)]).st, (yyvsp[(2) - (6)]).st, (yyvsp[(4) - (6)]).st);
 		(yyval).st->nodeType = "VAR_ARRAY_DECLARATION";
@@ -1576,7 +1576,7 @@ yyreduce:
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 114 "Compiler.y"
+#line 114 "compiler.y"
     {
 		(yyval).st = create_tree("INT", 0, -1);
 		(yyval).st->nodeType = "TYPE";
@@ -1586,7 +1586,7 @@ yyreduce:
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 119 "Compiler.y"
+#line 119 "compiler.y"
     {
 		(yyval).st = create_tree("VOID", 0, -1);
 		(yyval).st->nodeType = "TYPE";
@@ -1596,7 +1596,7 @@ yyreduce:
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 124 "Compiler.y"
+#line 124 "compiler.y"
     {
 		(yyval).st = create_tree("BOOL", 0, -1);
 		(yyval).st->nodeType = "TYPE";
@@ -1606,7 +1606,7 @@ yyreduce:
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 129 "Compiler.y"
+#line 129 "compiler.y"
     {
 		(yyval).st = create_tree("DOUBLE", 0, -1);
 		(yyval).st->nodeType = "TYPE";
@@ -1616,7 +1616,7 @@ yyreduce:
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 136 "Compiler.y"
+#line 136 "compiler.y"
     {
 		//TODO
 		(yyval).st = create_tree("fun_declaration", 3, -1, (yyvsp[(1) - (7)]).st, (yyvsp[(2) - (7)]).st, (yyvsp[(5) - (7)]).st);
@@ -1636,7 +1636,7 @@ yyreduce:
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 153 "Compiler.y"
+#line 153 "compiler.y"
     {
 		(yyval).st = create_tree("fun_definition", 4, -1, (yyvsp[(1) - (7)]).st, (yyvsp[(2) - (7)]).st, (yyvsp[(5) - (7)]).st, (yyvsp[(7) - (7)]).st);
 		(yyval).st->nodeType = "FUN_DEFINITION";
@@ -1650,14 +1650,14 @@ yyreduce:
 		funcDefined[(yyvsp[(2) - (7)]).st->nodeName]=true;
 		
 		if((yyvsp[(7) - (7)]).type != (yyvsp[(1) - (7)]).st->nodeName){
-			cout << "[Compile Error] Line: " << (yyval).lineNo << " return value type in statement is not " << (yyvsp[(1) - (7)]).st->nodeName << endl; 
+			cout << "[Compile Error] Line:" << (yyval).lineNo << " return value type in statement is not " << (yyvsp[(1) - (7)]).st->nodeName << endl; 
 		}
 	}
     break;
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 172 "Compiler.y"
+#line 172 "compiler.y"
     {
 		for(int i = 0; i < funcPaTypes.size(); i++){
 			funcPaTypes.pop_back();
@@ -1669,7 +1669,7 @@ yyreduce:
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 181 "Compiler.y"
+#line 181 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1680,7 +1680,7 @@ yyreduce:
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 187 "Compiler.y"
+#line 187 "compiler.y"
     {
 		(yyval).st = create_tree("VOID", 0, -1);
 		(yyval).st->nodeType = "VOID";
@@ -1693,7 +1693,7 @@ yyreduce:
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 197 "Compiler.y"
+#line 197 "compiler.y"
     {
 		(yyval).st = create_tree("params_list", 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(3) - (3)]).st);
 		(yyval).st->nodeType = "PARAMS";
@@ -1705,7 +1705,7 @@ yyreduce:
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 204 "Compiler.y"
+#line 204 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1716,7 +1716,7 @@ yyreduce:
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 212 "Compiler.y"
+#line 212 "compiler.y"
     {
 		(yyval).st = create_tree("param", 2, -1, (yyvsp[(1) - (2)]).st, (yyvsp[(2) - (2)]).st);
 		(yyval).st->nodeType = "PARAM";
@@ -1730,13 +1730,14 @@ yyreduce:
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 221 "Compiler.y"
+#line 221 "compiler.y"
     {
 		(yyval).st = create_tree("param_array", 2, -1, (yyvsp[(1) - (4)]).st, (yyvsp[(2) - (4)]).st);
+		(yyvsp[(1) - (4)]).st->nodeName = (yyvsp[(1) - (4)]).st->nodeName + "*"; 
 		(yyval).st->nodeType = "PARAM";
 		(yyval).lineNo = (yyvsp[(1) - (4)]).lineNo;
 		
-		(yyval).funcParas = (yyvsp[(1) - (4)]).st->nodeName + "*";
+		(yyval).funcParas = (yyvsp[(1) - (4)]).st->nodeName;
 		funcPaTypes.push_back((yyvsp[(1) - (4)]).st->nodeName+"*");
 		funcPaNames.push_back((yyvsp[(2) - (4)]).st->nodeName);	
 	}
@@ -1744,7 +1745,7 @@ yyreduce:
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 232 "Compiler.y"
+#line 233 "compiler.y"
     {
 		(yyval).st = create_tree("compound_stmt",2,-1,(yyvsp[(2) - (4)]).st,(yyvsp[(3) - (4)]).st);
 		(yyval).st->nodeType = "COM_STATEMENTS";
@@ -1756,7 +1757,7 @@ yyreduce:
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 241 "Compiler.y"
+#line 242 "compiler.y"
     {
 		symTable.createTable();
 		
@@ -1773,7 +1774,7 @@ yyreduce:
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 255 "Compiler.y"
+#line 256 "compiler.y"
     {
 		symTable.deleteTable();
 	}
@@ -1781,7 +1782,7 @@ yyreduce:
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 259 "Compiler.y"
+#line 260 "compiler.y"
     {
 		(yyval).st = NULL;
 	}
@@ -1789,7 +1790,7 @@ yyreduce:
 
   case 28:
 /* Line 1792 of yacc.c  */
-#line 262 "Compiler.y"
+#line 263 "compiler.y"
     {
 		(yyval).st = create_tree("local_declarations",2,-1,(yyvsp[(1) - (2)]).st,(yyvsp[(2) - (2)]).st);
 		(yyval).st->nodeType = "DECLARATION";
@@ -1799,7 +1800,7 @@ yyreduce:
 
   case 29:
 /* Line 1792 of yacc.c  */
-#line 268 "Compiler.y"
+#line 269 "compiler.y"
     {
 		(yyval).st = NULL;
 		
@@ -1809,7 +1810,7 @@ yyreduce:
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 273 "Compiler.y"
+#line 274 "compiler.y"
     {
 		(yyval).st = create_tree("statement_list",2,-1,(yyvsp[(1) - (2)]).st,(yyvsp[(2) - (2)]).st);
 		(yyval).st->nodeType = "STATEMENTS";
@@ -1838,7 +1839,7 @@ yyreduce:
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 299 "Compiler.y"
+#line 300 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1850,7 +1851,7 @@ yyreduce:
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 306 "Compiler.y"
+#line 307 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1861,7 +1862,7 @@ yyreduce:
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 312 "Compiler.y"
+#line 313 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1872,7 +1873,7 @@ yyreduce:
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 318 "Compiler.y"
+#line 319 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1883,7 +1884,7 @@ yyreduce:
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 324 "Compiler.y"
+#line 325 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1894,7 +1895,7 @@ yyreduce:
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 332 "Compiler.y"
+#line 333 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (2)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (2)]).lineNo;
@@ -1903,13 +1904,13 @@ yyreduce:
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 336 "Compiler.y"
+#line 337 "compiler.y"
     {(yyval).st = NULL;(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;}
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 339 "Compiler.y"
+#line 340 "compiler.y"
     {
 		(yyval).st = create_tree("IF", 2, -1, (yyvsp[(3) - (5)]).st, (yyvsp[(5) - (5)]).st);
 		(yyval).st->nodeType = "IF";
@@ -1924,7 +1925,7 @@ yyreduce:
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 349 "Compiler.y"
+#line 350 "compiler.y"
     {
 		(yyval).st = create_tree("IF_ELSE", 3, -1, (yyvsp[(3) - (7)]).st, (yyvsp[(5) - (7)]).st, (yyvsp[(7) - (7)]).st);
 		(yyval).st->nodeType = "IF_ELSE";
@@ -1957,7 +1958,7 @@ yyreduce:
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 379 "Compiler.y"
+#line 380 "compiler.y"
     {
 		(yyval).st = create_tree("WHILE", 2, -1, (yyvsp[(3) - (5)]).st, (yyvsp[(5) - (5)]).st);
 		(yyval).st->nodeType = "WHILE";
@@ -1973,7 +1974,7 @@ yyreduce:
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 392 "Compiler.y"
+#line 393 "compiler.y"
     {
 		(yyval).st = create_tree("RETURN", 0, -1);
 		(yyval).st->nodeType = "RETURN";
@@ -1985,7 +1986,7 @@ yyreduce:
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 399 "Compiler.y"
+#line 400 "compiler.y"
     {
 		(yyval).st = create_tree("RETURN", 1, -1, (yyvsp[(2) - (3)]).st);
 		(yyval).st->nodeType = "RETURN";
@@ -1997,7 +1998,7 @@ yyreduce:
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 408 "Compiler.y"
+#line 409 "compiler.y"
     {
 		(yyval).st = create_tree("=", 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(3) - (3)]).st);
 		(yyval).st->nodeType = "ASSIGNMENT";
@@ -2015,7 +2016,7 @@ yyreduce:
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 421 "Compiler.y"
+#line 422 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2026,7 +2027,7 @@ yyreduce:
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 429 "Compiler.y"
+#line 430 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2045,7 +2046,7 @@ yyreduce:
 
   case 46:
 /* Line 1792 of yacc.c  */
-#line 443 "Compiler.y"
+#line 444 "compiler.y"
     {
 		(yyval).st = create_tree((yyvsp[(1) - (4)]).st->nodeName, 1, -1, (yyvsp[(3) - (4)]).st);
 		(yyval).st->nodeType = "ARRAY";
@@ -2079,7 +2080,7 @@ yyreduce:
 
   case 47:
 /* Line 1792 of yacc.c  */
-#line 474 "Compiler.y"
+#line 475 "compiler.y"
     {
 		(yyval).st = create_tree((yyvsp[(2) - (3)]).tokenContent, 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(3) - (3)]).st);
 		(yyval).st->nodeType = "OPERATOR";
@@ -2097,7 +2098,7 @@ yyreduce:
 
   case 48:
 /* Line 1792 of yacc.c  */
-#line 487 "Compiler.y"
+#line 488 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2108,7 +2109,7 @@ yyreduce:
 
   case 49:
 /* Line 1792 of yacc.c  */
-#line 495 "Compiler.y"
+#line 496 "compiler.y"
     {
 		(yyval).st = create_tree((yyvsp[(2) - (3)]).tokenContent, 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(3) - (3)]).st);
 		(yyval).st->nodeType = "OPERATOR";
@@ -2126,7 +2127,7 @@ yyreduce:
 
   case 50:
 /* Line 1792 of yacc.c  */
-#line 508 "Compiler.y"
+#line 509 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2137,7 +2138,7 @@ yyreduce:
 
   case 51:
 /* Line 1792 of yacc.c  */
-#line 516 "Compiler.y"
+#line 517 "compiler.y"
     {
 		(yyval).st = create_tree((yyvsp[(2) - (3)]).tokenContent, 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(3) - (3)]).st);
 		(yyval).st->nodeType = "OPERATOR";
@@ -2155,7 +2156,7 @@ yyreduce:
 
   case 52:
 /* Line 1792 of yacc.c  */
-#line 529 "Compiler.y"
+#line 530 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2166,7 +2167,7 @@ yyreduce:
 
   case 53:
 /* Line 1792 of yacc.c  */
-#line 537 "Compiler.y"
+#line 538 "compiler.y"
     {
 		(yyval).st = (yyvsp[(2) - (3)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (3)]).lineNo;
@@ -2177,7 +2178,7 @@ yyreduce:
 
   case 54:
 /* Line 1792 of yacc.c  */
-#line 543 "Compiler.y"
+#line 544 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2188,7 +2189,7 @@ yyreduce:
 
   case 55:
 /* Line 1792 of yacc.c  */
-#line 549 "Compiler.y"
+#line 550 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2199,7 +2200,7 @@ yyreduce:
 
   case 56:
 /* Line 1792 of yacc.c  */
-#line 555 "Compiler.y"
+#line 556 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;	
@@ -2209,7 +2210,7 @@ yyreduce:
 
   case 57:
 /* Line 1792 of yacc.c  */
-#line 560 "Compiler.y"
+#line 561 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;	
@@ -2219,7 +2220,7 @@ yyreduce:
 
   case 58:
 /* Line 1792 of yacc.c  */
-#line 565 "Compiler.y"
+#line 566 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;	
@@ -2229,7 +2230,7 @@ yyreduce:
 
   case 59:
 /* Line 1792 of yacc.c  */
-#line 572 "Compiler.y"
+#line 573 "compiler.y"
     {
 		(yyval).st = create_tree("call", 2, -1, (yyvsp[(1) - (4)]).st, (yyvsp[(3) - (4)]).st);
 		(yyval).st->nodeType = "FUN_CALL";
@@ -2276,7 +2277,7 @@ yyreduce:
 
   case 60:
 /* Line 1792 of yacc.c  */
-#line 615 "Compiler.y"
+#line 616 "compiler.y"
     {
 		(yyval).st = create_tree("NO_ARGS", 0, -1);
 		(yyval).st->nodeType = "ARGS";
@@ -2286,7 +2287,7 @@ yyreduce:
 
   case 61:
 /* Line 1792 of yacc.c  */
-#line 620 "Compiler.y"
+#line 621 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2297,7 +2298,7 @@ yyreduce:
 
   case 62:
 /* Line 1792 of yacc.c  */
-#line 628 "Compiler.y"
+#line 629 "compiler.y"
     {
 		(yyval).st = create_tree("arg_list", 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(3) - (3)]).st);
 		(yyval).st->nodeType = "ARGS";
@@ -2309,7 +2310,7 @@ yyreduce:
 
   case 63:
 /* Line 1792 of yacc.c  */
-#line 635 "Compiler.y"
+#line 636 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2320,7 +2321,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 2324 "Compiler.tab.c"
+#line 2325 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2552,7 +2553,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 642 "Compiler.y"
+#line 643 "compiler.y"
 
 void yyerror(char const *s)
 {

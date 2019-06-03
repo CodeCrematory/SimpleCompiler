@@ -83,7 +83,7 @@ var_declaration:
 	}
 	| type_specifier IDENTIFIER '=' simple_expression ';' {
 		//TODO
-		$$.st = create_tree("var_declaration", 3, -1, $1.st, $2.st, $4.st);
+		$$.st = create_tree("var_declaration_with_initial", 3, -1, $1.st, $2.st, $4.st);
 		$$.st->nodeType = "VAR_DECLARATION_WITH_INITIAL";
 		$$.lineNo = $1.lineNo;
 		
@@ -163,7 +163,7 @@ fun_definition:
 		funcDefined[$2.st->nodeName]=true;
 		
 		if($7.type != $1.st->nodeName){
-			cout << "[Compile Error] Line: " << $$.lineNo << " return value type in statement is not " << $1.st->nodeName << endl; 
+			cout << "[Compile Error] Line:" << $$.lineNo << " return value type in statement is not " << $1.st->nodeName << endl; 
 		}
 	};
 
@@ -220,10 +220,11 @@ param:
 	}
 	| type_specifier IDENTIFIER '[' ']' {
 		$$.st = create_tree("param_array", 2, -1, $1.st, $2.st);
+		$1.st->nodeName = $1.st->nodeName + "*"; 
 		$$.st->nodeType = "PARAM";
 		$$.lineNo = $1.lineNo;
 		
-		$$.funcParas = $1.st->nodeName + "*";
+		$$.funcParas = $1.st->nodeName;
 		funcPaTypes.push_back($1.st->nodeName+"*");
 		funcPaNames.push_back($2.st->nodeName);	
 	};

@@ -515,8 +515,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "Compiler.l"
-#line 2 "Compiler.l"
+#line 1 "compiler.l"
+#line 2 "compiler.l"
 #define YYSTYPE attributes
 #include "tree.h"
 #include "Compiler.tab.h"
@@ -745,7 +745,7 @@ YY_DECL
 		}
 
 	{
-#line 19 "Compiler.l"
+#line 19 "compiler.l"
 
 
 #line 751 "lex.yy.c"
@@ -817,57 +817,57 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "Compiler.l"
+#line 21 "compiler.l"
 { comment();/*这种注释需要一个函数来去掉*/}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 22 "Compiler.l"
+#line 22 "compiler.l"
 { /* 直接去掉行注释 */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 24 "Compiler.l"
+#line 24 "compiler.l"
 { count(); yylval.lineNo = yylineno;	return(VOID); 	}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 25 "Compiler.l"
+#line 25 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(BOOL); 	}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 26 "Compiler.l"
+#line 26 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(INT); 	}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 27 "Compiler.l"
+#line 27 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(DOUBLE); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 29 "Compiler.l"
+#line 29 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(IF); 	}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 30 "Compiler.l"
+#line 30 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(ELSE); 	}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 31 "Compiler.l"
+#line 31 "compiler.l"
 { count(); yylval.lineNo = yylineno; 	return(WHILE); 	}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 32 "Compiler.l"
+#line 32 "compiler.l"
 { count(); yylval.lineNo = yylineno;	return(RETURN); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 34 "Compiler.l"
+#line 34 "compiler.l"
 { count(); 
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno;
@@ -877,7 +877,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 40 "Compiler.l"
+#line 40 "compiler.l"
 { count();
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno;
@@ -887,102 +887,102 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 47 "Compiler.l"
+#line 47 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="+";  	return(ADD_OP); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 48 "Compiler.l"
+#line 48 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="-"; 	return(ADD_OP); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 49 "Compiler.l"
+#line 49 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="*"; 	return(MUL_OP); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 50 "Compiler.l"
+#line 50 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="/"; 	return(MUL_OP); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 51 "Compiler.l"
+#line 51 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="<"; 	return(REL_OP); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 52 "Compiler.l"
+#line 52 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent=">"; 	return(REL_OP); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 53 "Compiler.l"
+#line 53 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('='); 	}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 54 "Compiler.l"
+#line 54 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(';'); 	}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 55 "Compiler.l"
+#line 55 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(','); 	}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 56 "Compiler.l"
+#line 56 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('('); 	}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 57 "Compiler.l"
+#line 57 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(')'); 	}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 58 "Compiler.l"
+#line 58 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('['); 	}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 59 "Compiler.l"
+#line 59 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return(']'); 	}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 60 "Compiler.l"
+#line 60 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('{'); 	}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 61 "Compiler.l"
+#line 61 "compiler.l"
 { count(); yylval.lineNo = yylineno;  	return('}'); 	}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 63 "Compiler.l"
+#line 63 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="<=";  	return(REL_OP);	}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 64 "Compiler.l"
+#line 64 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent=">=";  	return(REL_OP);	}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 65 "Compiler.l"
+#line 65 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="==";  	return(REL_OP);	}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 66 "Compiler.l"
+#line 66 "compiler.l"
 { count(); yylval.lineNo = yylineno; yylval.tokenContent="!=";  	return(REL_OP);	}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 68 "Compiler.l"
+#line 68 "compiler.l"
 { count(); 
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno; 
@@ -992,7 +992,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 75 "Compiler.l"
+#line 75 "compiler.l"
 { count(); 
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno;
@@ -1002,7 +1002,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 82 "Compiler.l"
+#line 82 "compiler.l"
 { count(); 
 					yylval.tokenContent = yytext; 
 					yylval.lineNo = yylineno;
@@ -1013,12 +1013,12 @@ YY_RULE_SETUP
 case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
-#line 89 "Compiler.l"
+#line 89 "compiler.l"
 { count();}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 91 "Compiler.l"
+#line 91 "compiler.l"
 ECHO;
 	YY_BREAK
 #line 1024 "lex.yy.c"
@@ -2038,7 +2038,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 91 "Compiler.l"
+#line 91 "compiler.l"
 
 int yywrap() {
 	return 1;
