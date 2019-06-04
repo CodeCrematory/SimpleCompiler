@@ -1,10 +1,11 @@
 int testvar[10];
 int count=0;
-double f(int a[],int b){
+double f(int qq[],int b){
 double count = 1.0;
 return count;
 }
 int main(int in){
+char qq;
 int count=testvar[5];
 double shit = 1.2;
 shit = f(testvar,1);

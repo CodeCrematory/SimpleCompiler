@@ -27,7 +27,7 @@ void yyerror(const char*);
 
 %token IDENTIFIER CONSTANT_INT CONSTANT_DOUBLE CONSTANT_BOOL
 %token ADD_OP MUL_OP REL_OP
-%token BOOL INT DOUBLE VOID
+%token BOOL INT DOUBLE VOID CHAR
 %token IF ELSE WHILE RETURN
 
 %token ';' ',' '=' '[' ']' '{' '}' '(' ')'
@@ -130,6 +130,11 @@ type_specifier:
 		$$.st = create_tree("DOUBLE", 0, -1);
 		$$.st->nodeType = "TYPE";
 		$$.lineNo = $1.lineNo;
+	}
+	| CHAR {
+		$$.st = create_tree("CHAR", 0, -1);
+		$$.st->nodeType = "TYPE";
+		$$.lineNo = $1.lineNo;
 	};
 
 fun_declaration:
@@ -170,10 +175,6 @@ fun_definition:
 para_starts:
 	/*epsilon*/
 	{
-		for(int i = 0; i < funcPaTypes.size(); i++){
-			funcPaTypes.pop_back();
-			funcPaNames.pop_back();
-		}
 		isFuncStatement = 1;
 	};
 
@@ -225,7 +226,7 @@ param:
 		$$.lineNo = $1.lineNo;
 		
 		$$.funcParas = $1.st->nodeName;
-		funcPaTypes.push_back($1.st->nodeName+"*");
+		funcPaTypes.push_back($1.st->nodeName);
 		funcPaNames.push_back($2.st->nodeName);	
 	};
 
@@ -249,7 +250,14 @@ compound_stmt_start:
 					cout << "[Compile Error] Line:" << $1.lineNo << " function parameters name should be different." << endl; 
 				}
 			}
+			int parasCount = funcPaTypes.size();
+			for(int i = 0; i < parasCount; i++){
+				funcPaTypes.pop_back();
+				funcPaNames.pop_back();
+			}
+			isFuncStatement = 0;
 		}
+		
 	};
 	
 compound_stmt_end:
@@ -429,6 +437,7 @@ expression:
 var:
 	IDENTIFIER {
 		$$.st = $1.st;
+		$$.st->varType=symTable.getSymbolType($$.st->nodeName);
 		$$.lineNo = $1.lineNo;
 		
 		//check symbol defined and get type
@@ -444,6 +453,8 @@ var:
 	| IDENTIFIER '[' expression ']' {
 		$$.st = create_tree($1.st->nodeName, 1, -1, $3.st);
 		$$.st->nodeType = "ARRAY";
+		string buff1 = symTable.getSymbolType($$.st->nodeName);
+		$1.st->varType=buff1.substr(0,buff1.size()-1);
 		$$.lineNo = $1.lineNo;
 		
 		string buff;

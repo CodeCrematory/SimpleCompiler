@@ -15,6 +15,7 @@ public:
 	int childNum;//unused,use child.size() 
 	vector<treeNode*> child;//there may be NULL in this vector, remember to check when reference
 	string code;//now may be useless
+	string varType;//when the node is a ID, this attr tells what type the variable is or what type the ele of the array is
 	string nodeType;
 	//CONSTANT value can be accessed in nodeName,leaf node
 	//ID var name can be accessed in nodeName,leaf node

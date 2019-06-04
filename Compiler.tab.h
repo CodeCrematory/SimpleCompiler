@@ -57,11 +57,12 @@ extern int yydebug;
      INT = 266,
      DOUBLE = 267,
      VOID = 268,
-     IF = 269,
-     ELSE = 270,
-     WHILE = 271,
-     RETURN = 272,
-     LOWER_THAN_ELSE = 273
+     CHAR = 269,
+     IF = 270,
+     ELSE = 271,
+     WHILE = 272,
+     RETURN = 273,
+     LOWER_THAN_ELSE = 274
    };
 #endif
 
