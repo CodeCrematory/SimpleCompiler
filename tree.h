@@ -15,15 +15,16 @@ public:
 	int childNum;//unused,use child.size() 
 	vector<treeNode*> child;//there may be NULL in this vector, remember to check when reference
 	string code;//now may be useless
+	string varType;//when the node is a ID, this attr tells what type the variable is or what type the ele of the array is
 	string nodeType;
 	//CONSTANT value can be accessed in nodeName,leaf node
 	//ID var name can be accessed in nodeName,leaf node
 	//OPERATOR op type can be accessed in nodeName, has 2 children(CONSTANT | ID | ARRAY | OPERATOR | FUN_CALL)*2
 	//PROGRAM root node,has one child DECLARATION
-	//DECLRATION has 1 or 2 children(DECLARATION | VAR_DECLARATION | VAR_DECALRATION_WITH_INITIAL | VAR_ARRAY_DECALRATION)*1/2
-	//VAR_DECALRATION has 2 children(TYPE + ID)
+	//DECLARATION has 1 or 2 children(DECLARATION | VAR_DECLARATION | VAR_DECALRATION_WITH_INITIAL | VAR_ARRAY_DECALRATION)*1/2
+	//VAR_DECLRATION has 2 children(TYPE + ID)
 	//VAR_DECLARATION_WITH_INITIAL has 3 children(TYPE + ID + (OPERATOR|CONSTANT|ID|ARRAY|FUN_CALL))
-	//VAR_ARRAY_DECALRATION has 3 children(TYPE + ID + CONSTANT)
+	//VAR_ARRAY_DECLRATION has 3 children(TYPE + ID + CONSTANT)
 	//TYPE value can be accessed in nodeName,leaf node
 	//FUN_DECLARATION has 3 children (TYPE + ID + (PARAMS|VOID))
 	//FUN_DEFINITION 4 children (TYPE + ID + (PARAMS|PARAM|VOID) + STATEMENTS)
@@ -45,6 +46,7 @@ public:
 	
 	treeNode(string name, int childNum, int lineNo);
 	void printTree();
+	void printTree2(int depth);
 	~treeNode();
 };
 
@@ -55,7 +57,7 @@ public:
 	treeNode* st; //node of the tree, all terminal and non-terminal has the valid attr
 	int lineNo;	//the line of the token, all terminal and non-terminal has the valid attr
 	string tokenContent;//content of the token, ADD MUL REL-OP has the valid attr
-	string type;//cthe type of the variable, expression, function call,args, paras has the valid attr
+	string type;//cthe type of the variable, expression, function call,args, paras has the valid attr use for return check
 	string funcParas;//usd to collect function parameters types when function declaration
 	/*below used for code generation*/
 	string interCode;

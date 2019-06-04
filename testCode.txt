@@ -1,9 +1,13 @@
 int testvar[10];
-int f(int a){
-return 0;
+int count=0;
+double f(int qq[],int b){
+double count = 1.0;
+return count;
 }
 int main(int in){
-int count=testvar;
-count=f(count);
+char qq;
+int count=testvar[5];
+double shit = 1.2;
+shit = f(testvar,1);
 return 1;
 }

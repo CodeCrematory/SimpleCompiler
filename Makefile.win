@@ -4,8 +4,8 @@
 CPP      = g++.exe -D__DEBUG__
 CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = Compiler.tab.o lex.yy.o tree.o table.o
-LINKOBJ  = Compiler.tab.o lex.yy.o tree.o table.o
+OBJ      = Compiler.tab.o lex.yy.o tree.o table.o draw.o
+LINKOBJ  = Compiler.tab.o lex.yy.o tree.o table.o draw.o
 LIBS     = -L"D:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"D:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -g3
 INCS     = -I"D:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"D:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"D:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"D:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"D:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
@@ -35,3 +35,6 @@ tree.o: tree.cpp
 
 table.o: table.cpp
 	$(CPP) -c table.cpp -o table.o $(CXXFLAGS)
+
+draw.o: draw.cpp
+	$(CPP) -c draw.cpp -o draw.o $(CXXFLAGS)

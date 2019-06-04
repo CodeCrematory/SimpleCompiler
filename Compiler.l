@@ -25,6 +25,7 @@ L			[a-zA-Z_]
 "bool"			{ count(); yylval.lineNo = yylineno;  	return(BOOL); 	}
 "int"			{ count(); yylval.lineNo = yylineno;  	return(INT); 	}
 "double"		{ count(); yylval.lineNo = yylineno;  	return(DOUBLE); }
+"char"			{ count(); yylval.lineNo = yylineno;	return(CHAR);}
 
 "if"			{ count(); yylval.lineNo = yylineno;  	return(IF); 	}
 "else"			{ count(); yylval.lineNo = yylineno;  	return(ELSE); 	}

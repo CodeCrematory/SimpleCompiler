@@ -4,6 +4,7 @@
 #include <map>
 #include "tree.h"
 #include "table.h"
+#include "draw.h" 
 using namespace std;
 
 extern char *yytext;
@@ -26,7 +27,7 @@ void yyerror(const char*);
 
 %token IDENTIFIER CONSTANT_INT CONSTANT_DOUBLE CONSTANT_BOOL
 %token ADD_OP MUL_OP REL_OP
-%token BOOL INT DOUBLE VOID
+%token BOOL INT DOUBLE VOID CHAR
 %token IF ELSE WHILE RETURN
 
 %token ';' ',' '=' '[' ']' '{' '}' '(' ')'
@@ -45,7 +46,7 @@ Program:
 declaration_list:
 	declaration_list declaration {
 		$$.st = create_tree("declaration_list", 2, -1, $1.st, $2.st);
-		$$.st->nodeType = "DECALRATION";
+		$$.st->nodeType = "DECLARATION";
 		$$.lineNo = $1.lineNo;
 	}
 	| declaration {
@@ -71,7 +72,7 @@ declaration:
 var_declaration:
 	type_specifier IDENTIFIER ';' {
 		$$.st = create_tree("var_declaration", 2, -1, $1.st, $2.st);
-		$$.st->nodeType = "VAR_DECALRATION";
+		$$.st->nodeType = "VAR_DECLARATION";
 		$$.lineNo = $1.lineNo;
 		
 		//insert into symbol table
@@ -82,8 +83,8 @@ var_declaration:
 	}
 	| type_specifier IDENTIFIER '=' simple_expression ';' {
 		//TODO
-		$$.st = create_tree("var_declaration", 3, -1, $1.st, $2.st, $4.st);
-		$$.st->nodeType = "VAR_DECALRATION_WITH_INITIAL";
+		$$.st = create_tree("var_declaration_with_initial", 3, -1, $1.st, $2.st, $4.st);
+		$$.st->nodeType = "VAR_DECLARATION_WITH_INITIAL";
 		$$.lineNo = $1.lineNo;
 		
 		//insert into symbol table
@@ -100,7 +101,7 @@ var_declaration:
 	}
 	| type_specifier IDENTIFIER '[' CONSTANT_INT ']' ';' {
 		$$.st = create_tree("var_declaration", 3, -1, $1.st, $2.st, $4.st);
-		$$.st->nodeType = "VAR_ARRAY_DECALRATION";
+		$$.st->nodeType = "VAR_ARRAY_DECLARATION";
 		$$.lineNo = $1.lineNo;
 		
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName+"*");
@@ -129,6 +130,11 @@ type_specifier:
 		$$.st = create_tree("DOUBLE", 0, -1);
 		$$.st->nodeType = "TYPE";
 		$$.lineNo = $1.lineNo;
+	}
+	| CHAR {
+		$$.st = create_tree("CHAR", 0, -1);
+		$$.st->nodeType = "TYPE";
+		$$.lineNo = $1.lineNo;
 	};
 
 fun_declaration:
@@ -150,7 +156,7 @@ fun_declaration:
 
 fun_definition:
 	type_specifier IDENTIFIER '(' para_starts params ')' compound_stmt {
-		$$.st = create_tree("fun_definition", 4, -1, $1.st, $2.st, $4.st, $6.st);
+		$$.st = create_tree("fun_definition", 4, -1, $1.st, $2.st, $5.st, $7.st);
 		$$.st->nodeType = "FUN_DEFINITION";
 		$$.lineNo = $1.lineNo;
 		
@@ -169,10 +175,6 @@ fun_definition:
 para_starts:
 	/*epsilon*/
 	{
-		for(int i = 0; i < funcPaTypes.size(); i++){
-			funcPaTypes.pop_back();
-			funcPaNames.pop_back();
-		}
 		isFuncStatement = 1;
 	};
 
@@ -219,11 +221,12 @@ param:
 	}
 	| type_specifier IDENTIFIER '[' ']' {
 		$$.st = create_tree("param_array", 2, -1, $1.st, $2.st);
+		$1.st->nodeName = $1.st->nodeName + "*"; 
 		$$.st->nodeType = "PARAM";
 		$$.lineNo = $1.lineNo;
 		
-		$$.funcParas = $1.st->nodeName + "*";
-		funcPaTypes.push_back($1.st->nodeName+"*");
+		$$.funcParas = $1.st->nodeName;
+		funcPaTypes.push_back($1.st->nodeName);
 		funcPaNames.push_back($2.st->nodeName);	
 	};
 
@@ -247,7 +250,14 @@ compound_stmt_start:
 					cout << "[Compile Error] Line:" << $1.lineNo << " function parameters name should be different." << endl; 
 				}
 			}
+			int parasCount = funcPaTypes.size();
+			for(int i = 0; i < parasCount; i++){
+				funcPaTypes.pop_back();
+				funcPaNames.pop_back();
+			}
+			isFuncStatement = 0;
 		}
+		
 	};
 	
 compound_stmt_end:
@@ -299,7 +309,8 @@ statement:
 		$$.st = $1.st;
 		$$.lineNo = $1.lineNo;
 		
-		$$.type = "STATEMENT";
+		$$.type = "STATEMENT"; 
+		
 	}
 	| compound_stmt {
 		$$.st = $1.st;
@@ -426,6 +437,7 @@ expression:
 var:
 	IDENTIFIER {
 		$$.st = $1.st;
+		$$.st->varType=symTable.getSymbolType($$.st->nodeName);
 		$$.lineNo = $1.lineNo;
 		
 		//check symbol defined and get type
@@ -441,6 +453,8 @@ var:
 	| IDENTIFIER '[' expression ']' {
 		$$.st = create_tree($1.st->nodeName, 1, -1, $3.st);
 		$$.st->nodeType = "ARRAY";
+		string buff1 = symTable.getSymbolType($$.st->nodeName);
+		$1.st->varType=buff1.substr(0,buff1.size()-1);
 		$$.lineNo = $1.lineNo;
 		
 		string buff;
@@ -464,7 +478,7 @@ var:
 		}
 		
 		if($3.type != "INT"){
-				cout << "[Compile Error] Line:" << $$.lineNo << " array index tyoe should be int but not " << $3.type << endl; 
+				cout << "[Compile Error] Line:" << $$.lineNo << " array index type should be int but not " << $3.type << endl; 
 		}
 	};
 
@@ -577,11 +591,15 @@ call:
 			cout << "[Compile Error] Line:" << $$.lineNo << " function " << $1.st->nodeName << " is not declared." << endl; 
 			$$.type = "UNDEFINED"; 
 		}
+		else if(funcDefined.find($1.st->nodeName) == funcDefined.end()){
+			cout << "[Compile Error] Line:" << $$.lineNo  << " "<< $1.st->nodeName << " is not a function." << endl; 
+			$$.type = "UNDEFINED"; 
+		}
 		else{
 			string resType = symTable.getSymbolType($1.st->nodeName);
 			
 			if(funcDefined[$1.st->nodeName] == false){
-				cout << "[Compile Error] Line:" << $$.lineNo << " function " << $1.st->nodeName << " is declared but not defined." << endl; 
+				cout << "[Compile Error] Line:" << $$.lineNo << " function " << $1.st->nodeName << " is not defined." << endl; 
 			}
 			
 			vector<string> splitType;
@@ -620,7 +638,7 @@ args: /*可为空*/{
 
 arg_list:
 	arg_list ',' expression {
-		$$.st = create_tree("arg_list", 2, -1, $1.st, $2.st);
+		$$.st = create_tree("arg_list", 2, -1, $1.st, $3.st);
 		$$.st->nodeType = "ARGS";
 		$$.lineNo = $1.lineNo;
 		
@@ -648,7 +666,13 @@ int main(int argc,char* argv[]) {
 	
 	yyparse();
 	
-	root->printTree();
+	root->printTree2(0);
+	
+	ofstream out("a.gv");
+	out << "digraph AST {" << endl;
+	DrawTree(out, root, NULL, 0);
+	out << "}" << endl;
+	out.close();
 
 	fclose(yyin);
 	return 0;
