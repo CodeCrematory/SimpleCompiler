@@ -15,7 +15,7 @@ typedef enum {CONSTANT, ID, PROGRAM, DECLARATION, VAR_DECLARATION, VAR_DECLARATI
             VAR_ARRAY_DECLARATION, TYPE, FUN_DECLARATION, FUN_DEFINITION, _VOID, PARAMS, PARAM, 
             COM_STATEMENTS, STATEMENTS, _IF, IF_ELSE, _WHILE, _RETURN, ASSIGNMENT, ARRAY, OPERATOR, FUN_CALL, ARGS} nodeType;
 
-static map<string, int> typeMap = {{"BOOL", 1}, {"CHAR", 1}, {"INT", 4}, {"DOUBLE", 8}};
+static map<string, string> typeMap = {{"BOOL", "#1"}, {"CHAR", "#1"}, {"INT", "#4"}, {"DOUBLE", "#8"}};
 
 static map<string, int> nodeMap = {{"CONSTANT", CONSTANT}, {"ID", ID}, {"OPERATOR", OPERATOR}, {"PROGRAM", PROGRAM}, {"DECLARATION", DECLARATION}, 
                                 {"VAR_DECLARATION", VAR_DECLARATION}, {"VAR_DECLARATION_WITH_INITIAL", VAR_DECLARATION_WITH_INITIAL}, 

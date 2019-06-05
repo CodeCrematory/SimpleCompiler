@@ -5,6 +5,7 @@
 #include "tree.h"
 #include "table.h"
 #include "draw.h" 
+#include "interRepre.h"
 using namespace std;
 
 extern char *yytext;
@@ -673,6 +674,9 @@ int main(int argc,char* argv[]) {
 	DrawTree(out, root, NULL, 0);
 	out << "}" << endl;
 	out.close();
+
+	interRepre IR = interRepre(root);
+	IR.print_code();
 
 	fclose(yyin);
 	return 0;

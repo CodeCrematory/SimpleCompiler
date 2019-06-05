@@ -7,7 +7,6 @@ using namespace std;
 // Quad ====================================================
 
 string Quad::print_quad(){
-    cout << "quad" << endl;
     ostringstream ostr;
 	ostr << op << "," << arg1 << "," << arg2 << "," << res;
     string quad = ostr.str();
@@ -20,18 +19,14 @@ int interRepre::tempNum = 0;
 int interRepre::labelNum = 0;
 
 interRepre::interRepre(treeNode* node){
-    cout << "=====================================" << endl;
-    cout << "construct begin" << endl;
+    cout << "= constructing IR ... ====================================" << endl;
     gen_code(node);
-    cout << "construct end" << endl;
 }
 
 void interRepre::print_code(){
-    cout << "print_code begin" << endl;
     for(auto code : codeVec){
         cout << code.print_quad() << endl;
     }
-    cout << "print_code end" << endl;
 }
 
 string interRepre::get_temp(){
@@ -49,12 +44,12 @@ string interRepre::get_label(){
 }
 
 string interRepre::elem_size(treeNode* node){
-    return to_string(typeMap[node->varType]);
+    assert(nodeMap[node->nodeType] == ID);
+    return typeMap[node->varType];
 }
 
 void interRepre::add_code(string op, string arg1, string arg2, string res){
     Quad quad = Quad(op, arg1, arg2, res);
-    cout << "add quad" << endl;
     codeVec.push_back(quad);
 }
 
@@ -65,12 +60,12 @@ void interRepre::gen_code(treeNode* node){
 
     if (node != nullptr){
 
-        cout << node->nodeType << ": " << node->nodeName << endl;
-        for(auto child : node->child){
-            if(child != nullptr){
-                cout << "   " << child->nodeType << ": " << child->nodeName  << " " << child->varType << endl;
-            }
-        }
+        // cout << node->nodeType << ": " << node->nodeName << endl;
+        // for(auto child : node->child){
+        //     if(child != nullptr){
+        //         cout << "   " << child->nodeType << ": " << child->nodeName  << " " << child->varType << endl;
+        //     }
+        // }
 
         switch(nodeMap[node->nodeType]){
             case PROGRAM:
@@ -390,12 +385,12 @@ string interRepre::gen_exp(treeNode* node){
 
     if (node != nullptr){
 
-        cout << node->nodeType << ": " << node->nodeName << endl;
-        for(auto child : node->child){
-            if(child != nullptr){
-                cout << "   " << child->nodeType << ": " << child->nodeName  << " " << child->varType << endl;
-            }
-        }
+        // cout << node->nodeType << ": " << node->nodeName << endl;
+        // for(auto child : node->child){
+        //     if(child != nullptr){
+        //         cout << "   " << child->nodeType << ": " << child->nodeName  << " " << child->varType << endl;
+        //     }
+        // }
 
         switch(nodeMap[node->nodeType]){
             case ASSIGNMENT:
@@ -442,7 +437,7 @@ string interRepre::gen_exp(treeNode* node){
             case ARRAY:
                 /**
                  * ARRAY:
-                 * t1 = index * elem_size(ID)
+                 * t1 = index * elem_size(ID) # ID = nodeName
                  * t2 = &ID + t1
                  * return *t2
                 **/
