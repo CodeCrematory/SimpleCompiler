@@ -8,7 +8,7 @@ void DrawTree(ofstream& out, treeNode* curNode, treeNode* parNode, int parNum){
 	static int my_id = 0;
 	int curNum = my_id;
 	if (curNode != NULL){
-		out << "\tnode" << my_id++ << " [label=\"" << curNode->nodeName <<"\"];" <<endl;
+		out << "\tnode" << my_id++ << " [label=\"" << curNode->nodeName << "(" << curNode->nodeType << ")" <<"\"];" <<endl;
 		if (parNode != NULL){
 			out << "\tnode" << parNum << " -> node" << curNum << ";" <<endl;
 		}

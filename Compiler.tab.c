@@ -2063,7 +2063,7 @@ yyreduce:
 /* Line 1792 of yacc.c  */
 #line 453 "compiler.y"
     {
-		(yyval).st = create_tree((yyvsp[(1) - (4)]).st->nodeName, 1, -1, (yyvsp[(3) - (4)]).st);
+		(yyval).st = create_tree((yyvsp[(1) - (4)]).st->nodeName, 2, -1, (yyvsp[(1) - (4)]).st, (yyvsp[(3) - (4)]).st);
 		(yyval).st->nodeType = "ARRAY";
 		string buff1 = symTable.getSymbolType((yyval).st->nodeName);
 		(yyvsp[(1) - (4)]).st->varType=buff1.substr(0,buff1.size()-1);

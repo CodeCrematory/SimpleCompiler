@@ -451,7 +451,7 @@ var:
 		} 
 	}
 	| IDENTIFIER '[' expression ']' {
-		$$.st = create_tree($1.st->nodeName, 1, -1, $3.st);
+		$$.st = create_tree($1.st->nodeName, 2, -1, $1.st, $3.st);
 		$$.st->nodeType = "ARRAY";
 		string buff1 = symTable.getSymbolType($$.st->nodeName);
 		$1.st->varType=buff1.substr(0,buff1.size()-1);
