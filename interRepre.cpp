@@ -7,6 +7,7 @@ using namespace std;
 // Quad ====================================================
 
 string Quad::print_quad(){
+    cout << "quad" << endl;
     ostringstream ostr;
 	ostr << op << "," << arg1 << "," << arg2 << "," << res;
     string quad = ostr.str();
@@ -17,6 +18,21 @@ string Quad::print_quad(){
 
 int interRepre::tempNum = 0;
 int interRepre::labelNum = 0;
+
+interRepre::interRepre(treeNode* node){
+    cout << "=====================================" << endl;
+    cout << "construct begin" << endl;
+    gen_code(node);
+    cout << "construct end" << endl;
+}
+
+void interRepre::print_code(){
+    cout << "print_code begin" << endl;
+    for(auto code : codeVec){
+        cout << code.print_quad() << endl;
+    }
+    cout << "print_code end" << endl;
+}
 
 string interRepre::get_temp(){
     ostringstream ostr;
@@ -32,12 +48,13 @@ string interRepre::get_label(){
     return label;
 }
 
-string elem_size(treeNode* node){
+string interRepre::elem_size(treeNode* node){
     return to_string(typeMap[node->varType]);
 }
 
 void interRepre::add_code(string op, string arg1, string arg2, string res){
     Quad quad = Quad(op, arg1, arg2, res);
+    cout << "add quad" << endl;
     codeVec.push_back(quad);
 }
 
@@ -47,6 +64,14 @@ void interRepre::gen_code(treeNode* node){
     ostringstream ostr;
 
     if (node != nullptr){
+
+        cout << node->nodeType << ": " << node->nodeName << endl;
+        for(auto child : node->child){
+            if(child != nullptr){
+                cout << "   " << child->nodeType << ": " << child->nodeName  << " " << child->varType << endl;
+            }
+        }
+
         switch(nodeMap[node->nodeType]){
             case PROGRAM:
                 /**
@@ -55,7 +80,7 @@ void interRepre::gen_code(treeNode* node){
                 gen_code(node->child[0]);
                 break;
 
-            case DECLRATION:
+            case DECLARATION:
                 /**
                  * DECLARATION: call gen_code() on its child: DECLARATION | VAR_DECLARATION | VAR_DECALRATION_WITH_INITIAL | VAR_ARRAY_DECALRATION| FUN_DECLARATION| FUN_DEFINITION
                 **/
@@ -64,14 +89,16 @@ void interRepre::gen_code(treeNode* node){
                 }
                 break;
 
-            case VAR_DECALRATION:
+            case VAR_DECLARATION:
                 /**
                  * VAR_DECLARATION:
                  * op(dec) arg1(size) res(ID)
                 **/
                 assert(node->child.size() == 2);
-                assert(node->child[0]->nodeName == node->child[1]->varType);
-
+                
+                // type assignment
+                node->child[1]->varType = node->child[0]->nodeName;
+                // op(dec) arg1(size) res(ID)
                 op = "dec";
                 arg1 = elem_size(node->child[1]); // elem_size of ID
                 res = gen_exp(node->child[1]); // ID
@@ -85,8 +112,9 @@ void interRepre::gen_code(treeNode* node){
                  * res(ID) op(:=) arg1
                 **/
                 assert(node->child.size() == 3);
-                assert(node->child[0]->nodeName == node->child[1]->varType);
 
+                // type assignment
+                node->child[1]->varType = node->child[0]->nodeName;
                 // op(dec) arg1(size) res(ID)
                 op = "dec";
                 arg1 = elem_size(node->child[1]); // elem_size of ID
@@ -99,15 +127,16 @@ void interRepre::gen_code(treeNode* node){
                 add_code(op, arg1, arg2, res);
                 break;
 
-            case VAR_ARRAY_DECALRATION:
+            case VAR_ARRAY_DECLARATION:
                 /**
                  * VAR_ARRAY_DECALRATION:
                  * res(t1) = arg1(length) op(*) arg2(elem_size(ID))
                  * op(dec) arg1(t1) res(ID)
                 **/
                 assert(node->child.size() == 3);
-                assert(node->child[0]->nodeName == node->child[1]->varType);
 
+                // type assignment
+                node->child[1]->varType = node->child[0]->nodeName;
                 // t1 = length * elem_size(ID)
                 op = "*"; // multiply
                 arg1 = gen_exp(node->child[2]); // length
@@ -159,8 +188,9 @@ void interRepre::gen_code(treeNode* node){
                  * op(param) res(ID)
                 **/
                 assert(node->child.size() == 2);
-                assert(node->child[0]->nodeName == node->child[1]->varType);
 
+                // type assignment
+                node->child[1]->varType = node->child[0]->nodeName;
                 op = "param";
                 res = gen_exp(node->child[1]); // ID
                 add_code(op, arg1, arg2, res);
@@ -190,7 +220,7 @@ void interRepre::gen_code(treeNode* node){
                 }
                 break;
 
-            case IF:
+            case _IF:
                 /**
                  * IF:
                  * op(if_false) arg1(gen_exp(cond)) arg2(goto) res(L1)
@@ -254,7 +284,7 @@ void interRepre::gen_code(treeNode* node){
                 add_code(op, arg1, arg2, res);
                 break;
             
-            case WHILE:
+            case _WHILE:
                 /**
                  * WHILE:
                  * op(label) res(L1)
@@ -291,7 +321,7 @@ void interRepre::gen_code(treeNode* node){
                 add_code(op, arg1, arg2, res);
                 break;
             
-            case RETURN:
+            case _RETURN:
                 /**
                  * RETURN:
                  * op(return) res(return value) | op(end)
@@ -343,7 +373,7 @@ void interRepre::gen_code(treeNode* node){
             // do nothing
             case TYPE:
             case FUN_DECLARATION:
-            case VOID:
+            case _VOID:
             default:
                 break;
         }
@@ -359,6 +389,14 @@ string interRepre::gen_exp(treeNode* node){
     ostringstream ostr;
 
     if (node != nullptr){
+
+        cout << node->nodeType << ": " << node->nodeName << endl;
+        for(auto child : node->child){
+            if(child != nullptr){
+                cout << "   " << child->nodeType << ": " << child->nodeName  << " " << child->varType << endl;
+            }
+        }
+
         switch(nodeMap[node->nodeType]){
             case ASSIGNMENT:
                 /**
