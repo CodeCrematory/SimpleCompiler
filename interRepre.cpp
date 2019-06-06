@@ -180,13 +180,14 @@ void interRepre::gen_code(treeNode* node){
             case PARAM:
                 /**
                  * PARAM:
-                 * op(param) res(ID)
+                 * op(param) arg1(size) res(ID)
                 **/
                 assert(node->child.size() == 2);
 
                 // type assignment
                 node->child[1]->varType = node->child[0]->nodeName;
                 op = "param";
+                arg1 = elem_size(node->child[1]); // size
                 res = gen_exp(node->child[1]); // ID
                 add_code(op, arg1, arg2, res);
                 break;
