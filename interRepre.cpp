@@ -126,7 +126,7 @@ void interRepre::gen_code(treeNode* node){
                 /**
                  * VAR_ARRAY_DECALRATION:
                  * res(t1) = arg1(length) op(*) arg2(elem_size(ID))
-                 * op(dec) arg1(t1) res(ID)
+                 * op(dec) arg1(t1) arg2(elem_size(ID)) res(ID)
                 **/
                 assert(node->child.size() == 3);
 
@@ -138,10 +138,9 @@ void interRepre::gen_code(treeNode* node){
                 arg2 = elem_size(node->child[1]); // elem_size(ID)
                 res = get_temp();
                 add_code(op, arg1, arg2, res);
-                // op(dec) arg1(t1) res(ID)
+                // op(dec) arg1(t1) arg2(elem_size) res(ID)
                 op = "dec";
                 arg1 = res; // size
-                arg2 = "";
                 res = gen_exp(node->child[1]); // ID
                 add_code(op, arg1, arg2, res);
                 break;
