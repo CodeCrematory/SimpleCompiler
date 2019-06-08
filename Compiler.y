@@ -95,7 +95,13 @@ var_declaration:
 		}
 		else{
 			//check type
-			if($1.st->nodeName != $4.type){
+			if($1.st->nodeName =="CHAR" && $4.type == "INT"){
+				cout << "[Compile Warning] Line:" << $$.lineNo << " Initialize a char with a constant int which may be out of char range. " << endl;
+			}
+			else if($1.st->nodeName == "DOUBLE" && $4.type == "INT"){
+				cout << "[Compile Warning] Line:" << $$.lineNo << " Initialize a double with a int, append a dot to parse a const int to double." << endl;
+			}
+			else if($1.st->nodeName != $4.type){
 				cout << "[Compile Error] Line:" << $$.lineNo << " initializer should be type " << $1.st->nodeName << " but not " << $4.type << endl; 
 			}
 		}	
