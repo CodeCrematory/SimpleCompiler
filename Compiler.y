@@ -24,6 +24,14 @@ map<string,bool> funcDefined;//to show a function is defined or not
 int yylex(void);
 void yyerror(const char*); 
 
+template <class Type>  
+Type stringToNum(const string& str)  
+{  
+    istringstream iss(str);  
+    Type num;  
+    iss >> num;  
+    return num;      
+}  
 %}
 
 %token IDENTIFIER CONSTANT_INT CONSTANT_DOUBLE CONSTANT_BOOL
@@ -512,8 +520,39 @@ simple_expression:
 
 additive_expression:
 	additive_expression ADD_OP term {
-		$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
-		$$.st->nodeType = "OPERATOR";
+		//const fold
+		if($1.st->nodeType == "CONSTANT" && $3.st->nodeType == "CONSTANT"){
+			string new_const;
+			if($1.type == "INT" && $3.type == "INT"){
+				int left = stringToNum<int>($1.st->nodeName);
+				int right = stringToNum<int>($3.st->nodeName);
+				int temp;
+				if($2.tokenContent == "+")
+					temp = left+right;
+				else
+					temp = left-right;
+				new_const = to_string(temp);
+			}
+			else if($1.type == "DOUBLE" && $3.type == "DOUBLE"){
+				double left = stringToNum<double>($1.st->nodeName);
+				double right = stringToNum<double>($3.st->nodeName);
+				double temp;
+				if($2.tokenContent == "+")
+					temp = left+right;
+				else
+					temp = left-right;
+				new_const = to_string(temp);
+			}
+			else{
+				new_const = "404";
+			}
+			$$.st = create_tree(new_const,0,-1);
+			$$.st->nodeType = "CONSTANT";
+		}
+		else{
+			$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
+			$$.st->nodeType = "OPERATOR";
+		}
 		$$.lineNo = $1.lineNo;
 		
 		if($1.type != $3.type){
@@ -533,10 +572,42 @@ additive_expression:
 
 term:
 	term MUL_OP factor {
-		$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
-		$$.st->nodeType = "OPERATOR";
+		//const fold
+		if($1.st->nodeType == "CONSTANT" && $3.st->nodeType == "CONSTANT"){
+			string new_const;
+			if($1.type == "INT" && $3.type == "INT"){
+				int left = stringToNum<int>($1.st->nodeName);
+				int right = stringToNum<int>($3.st->nodeName);
+				int temp;
+				if($2.tokenContent == "*")
+					temp = left*right;
+				else
+					temp = left/right;
+				new_const = to_string(temp);
+			}
+			else if($1.type == "DOUBLE" && $3.type == "DOUBLE"){
+				double left = stringToNum<double>($1.st->nodeName);
+				double right = stringToNum<double>($3.st->nodeName);
+				double temp;
+				if($2.tokenContent == "*")
+					temp = left*right;
+				else
+					temp = left/right;
+				new_const = to_string(temp);
+			}
+			else{
+				new_const = "404";
+			}
+			$$.st = create_tree(new_const,0,-1);
+			$$.st->nodeType = "CONSTANT";
+		}
+		else{
+			$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
+			$$.st->nodeType = "OPERATOR";
+		}
 		$$.lineNo = $1.lineNo;
 		
+		//type check
 		if($1.type != $3.type){
 			cout << "[Compile Error] Line:" << $$.lineNo << " MUL_OP cannot operate on type " << $1.type << " and type " << $3.type << endl;
 			$$.type = "UNDEFINED"; 

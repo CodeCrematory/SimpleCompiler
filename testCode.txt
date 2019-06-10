@@ -1,2 +1,1 @@
-char a=0;
-double b=1;
+int test_const = (1+2)*5-10;

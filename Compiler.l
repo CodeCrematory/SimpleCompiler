@@ -98,7 +98,7 @@ void comment(void) {
 	column = 0;
 	char c, prev = 0;
 	
-	while (cin >> c)      /* (EOF maps to 0) */
+	while (c = fgetc(yyin))      /* (EOF maps to 0) *//*有问题*/
 	{
 		if (c == '/' && prev == '*')
 			return;
