@@ -53,3 +53,11 @@
 ### 6.5
 
 1.修复 array在调用时ARRAY只有一个节点的错误，改为两个节点ID+EXPRESSION 
+
+### 6.10
+
+1.增加纯常数表达式提前计算
+
+2.增加if、if else语句在条件是可以判定为true/false时 代码简化，去除deadCode
+
+3.修改函数缺失返回语句的报错：改成 “a return statement is expected.” （以前版本会认为返回值错误）

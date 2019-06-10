@@ -1,1 +1,11 @@
-int test_const = (1+2)*5-10;
+bool test_const = 1+2+3 > 3+2+1;
+int a;
+int main(int arg){
+	if(test_const){
+		a=1;
+	}
+	else{
+		a=2;
+	}
+	return a;
+}

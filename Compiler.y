@@ -32,6 +32,60 @@ Type stringToNum(const string& str)
     iss >> num;  
     return num;      
 }  
+
+template <class Type>
+string constFold(string left, string op, string right){
+	Type leftConst = stringToNum<Type>(left);
+	Type rightConst = stringToNum<Type>(right);
+	string res;
+	if(op == "+")
+		res = to_string(leftConst+rightConst);
+	else if (op == "-")
+		res = to_string(leftConst-rightConst);
+	else if(op == "*")
+		res = to_string(leftConst*rightConst);
+	else if(op == "/")
+		res = to_string(leftConst/rightConst);
+	else if(op == ">"){
+		if(leftConst > rightConst)
+			res = "true";
+		else 
+			res = "false";
+	}
+	else if(op == "<"){
+		if(leftConst < rightConst)
+			res = "true";
+		else 
+			res = "false";
+	}
+	else if(op == ">="){
+		if(leftConst >= rightConst)
+			res = "true";
+		else 
+			res = "false";
+	}
+	else if(op == "<="){
+		if(leftConst <= rightConst)
+			res = "true";
+		else 
+			res = "false";
+	}
+	else if(op == "=="){
+		if(leftConst == rightConst)
+			res = "true";
+		else 
+			res = "false";
+	}
+	else if(op == "!="){
+		if(leftConst != rightConst)
+			res == "true";
+		else 
+			res = "false";
+	}
+	return res;
+	
+}
+
 %}
 
 %token IDENTIFIER CONSTANT_INT CONSTANT_DOUBLE CONSTANT_BOOL
@@ -182,8 +236,11 @@ fun_definition:
 		
 		funcDefined[$2.st->nodeName]=true;
 		
-		if($7.type != $1.st->nodeName){
-			cout << "[Compile Error] Line:" << $$.lineNo << " return value type in statement is not " << $1.st->nodeName << endl; 
+		if($7.type == "STATEMENT" && $1.st->nodeName!="VOID"){
+			cout << "[Compile Error] Line:" << $$.lineNo << " a return statement is expected." << endl; 
+		}
+		else if($7.type != $1.st->nodeName){
+			cout << "[Compile Error] Line:" << $$.lineNo << " return value type(" << $7.type <<") in statement is not " << $1.st->nodeName << endl; 
 		}
 	};
 
@@ -361,8 +418,18 @@ expression_stmt:
 
 selection_stmt:
 	IF '(' expression ')' statement %prec LOWER_THAN_ELSE{
-		$$.st = create_tree("IF", 2, -1, $3.st, $5.st);
-		$$.st->nodeType = "IF";
+		//deadcode detecting
+		if($3.st->nodeName == "true" && $3.st->nodeType == "CONSTANT"){
+			$$.st = $5.st;
+		}
+		else if($3.st->nodeName == "false" && $3.st->nodeType == "CONSTANT"){
+			$$.st = NULL;
+			$$.type = "STATEMENT";
+		}
+		else{
+			$$.st = create_tree("IF", 2, -1, $3.st, $5.st);
+			$$.st->nodeType = "IF";
+		}
 		$$.lineNo = $1.lineNo;
 		
 		if($3.type != "BOOL"){
@@ -371,8 +438,17 @@ selection_stmt:
 		$$.type = $5.type;
 	}
 	| IF '(' expression ')' statement ELSE statement {
-		$$.st = create_tree("IF_ELSE", 3, -1, $3.st, $5.st, $7.st);
-		$$.st->nodeType = "IF_ELSE";
+		//deadcode detecting
+		if($3.st->nodeName == "true" && $3.st->nodeType == "CONSTANT"){
+			$$.st = $5.st;
+		}
+		else if($3.st->nodeName == "false" && $3.st->nodeType == "CONSTANT"){
+			$$.st = $7.st;
+		}
+		else{
+			$$.st = create_tree("IF_ELSE", 3, -1, $3.st, $5.st, $7.st);
+			$$.st->nodeType = "IF_ELSE";
+		}	
 		$$.lineNo = $1.lineNo;
 		
 		if($3.type != "BOOL"){
@@ -499,8 +575,25 @@ var:
 
 simple_expression:
 	additive_expression REL_OP additive_expression {
-		$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
-		$$.st->nodeType = "OPERATOR";
+		//const fold
+		if($1.st->nodeType == "CONSTANT" && $3.st->nodeType == "CONSTANT"){
+			string new_const;
+			if($1.type == "INT" && $3.type == "INT"){
+				new_const = constFold<int>($1.st->nodeName, $2.tokenContent, $3.st->nodeName);
+			}
+			else if($1.type == "DOUBLE" && $3.type == "DOUBLE"){
+				new_const = constFold<double>($1.st->nodeName, $2.tokenContent, $3.st->nodeName);
+			}
+			else{
+				new_const = "true";
+			}
+			$$.st = create_tree(new_const,0,-1);
+			$$.st->nodeType = "CONSTANT";
+		}
+		else{
+			$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
+			$$.st->nodeType = "OPERATOR";
+		}
 		$$.lineNo = $1.lineNo;
 		
 		if($1.type != $3.type){
@@ -524,24 +617,10 @@ additive_expression:
 		if($1.st->nodeType == "CONSTANT" && $3.st->nodeType == "CONSTANT"){
 			string new_const;
 			if($1.type == "INT" && $3.type == "INT"){
-				int left = stringToNum<int>($1.st->nodeName);
-				int right = stringToNum<int>($3.st->nodeName);
-				int temp;
-				if($2.tokenContent == "+")
-					temp = left+right;
-				else
-					temp = left-right;
-				new_const = to_string(temp);
+				new_const = constFold<int>($1.st->nodeName, $2.tokenContent, $3.st->nodeName);
 			}
 			else if($1.type == "DOUBLE" && $3.type == "DOUBLE"){
-				double left = stringToNum<double>($1.st->nodeName);
-				double right = stringToNum<double>($3.st->nodeName);
-				double temp;
-				if($2.tokenContent == "+")
-					temp = left+right;
-				else
-					temp = left-right;
-				new_const = to_string(temp);
+				new_const = constFold<double>($1.st->nodeName, $2.tokenContent, $3.st->nodeName);
 			}
 			else{
 				new_const = "404";
@@ -576,24 +655,10 @@ term:
 		if($1.st->nodeType == "CONSTANT" && $3.st->nodeType == "CONSTANT"){
 			string new_const;
 			if($1.type == "INT" && $3.type == "INT"){
-				int left = stringToNum<int>($1.st->nodeName);
-				int right = stringToNum<int>($3.st->nodeName);
-				int temp;
-				if($2.tokenContent == "*")
-					temp = left*right;
-				else
-					temp = left/right;
-				new_const = to_string(temp);
+				new_const = constFold<int>($1.st->nodeName, $2.tokenContent, $3.st->nodeName);
 			}
 			else if($1.type == "DOUBLE" && $3.type == "DOUBLE"){
-				double left = stringToNum<double>($1.st->nodeName);
-				double right = stringToNum<double>($3.st->nodeName);
-				double temp;
-				if($2.tokenContent == "*")
-					temp = left*right;
-				else
-					temp = left/right;
-				new_const = to_string(temp);
+				new_const = constFold<double>($1.st->nodeName, $2.tokenContent, $3.st->nodeName);
 			}
 			else{
 				new_const = "404";

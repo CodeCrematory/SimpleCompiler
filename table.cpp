@@ -1,5 +1,6 @@
 //Symbol Table
 #include "table.h"
+
 int hashFunction(string s) {
 	int i = 0;
 	int res = 0;
