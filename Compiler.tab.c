@@ -72,6 +72,7 @@
 #include "table.h"
 #include "draw.h" 
 #include "interRepre.h"
+ 
 using namespace std;
 
 extern char *yytext;
@@ -86,6 +87,7 @@ vector<string> funcPaTypes;// buffer of the parameters of the function, used to 
 vector<string> funcPaNames;// buffer of the parameters of the function, used to insert paras into tables when function declaration
 int isFuncStatement = 0;//to show if a compound statement belongs to a function delaration, which compiler need to add the parameters into the symbol table 
 map<string,bool> funcDefined;//to show a function is defined or not
+bool has_error = false;
 
 int yylex(void);
 void yyerror(const char*); 
@@ -154,7 +156,7 @@ string constFold(string left, string op, string right){
 
 
 /* Line 371 of yacc.c  */
-#line 158 "compiler.tab.c"
+#line 160 "compiler.tab.c"
 
 # ifndef YY_NULL
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -239,7 +241,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 243 "compiler.tab.c"
+#line 245 "compiler.tab.c"
 
 #ifdef short
 # undef short
@@ -552,13 +554,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   103,   103,   110,   115,   121,   125,   129,   136,   147,
-     171,   183,   188,   193,   198,   203,   210,   227,   249,   254,
-     260,   270,   277,   285,   294,   306,   315,   336,   340,   343,
-     349,   354,   380,   387,   393,   399,   405,   413,   417,   420,
-     440,   479,   492,   499,   508,   521,   529,   544,   577,   607,
-     615,   645,   653,   684,   692,   698,   704,   710,   715,   720,
-     727,   770,   775,   783,   790
+       0,   105,   105,   112,   117,   123,   127,   131,   138,   150,
+     178,   191,   196,   201,   206,   211,   218,   236,   261,   266,
+     272,   282,   289,   297,   306,   318,   327,   349,   353,   356,
+     362,   367,   394,   401,   407,   413,   419,   427,   431,   434,
+     455,   496,   510,   517,   526,   540,   548,   564,   600,   631,
+     639,   670,   678,   710,   718,   724,   730,   736,   741,   746,
+     753,   826,   831,   839,   846
 };
 #endif
 
@@ -1529,7 +1531,7 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 103 "compiler.y"
+#line 105 "compiler.y"
     { 
 		root = create_tree("Program", 1, -1, (yyvsp[(1) - (1)]).st);
 		
@@ -1539,7 +1541,7 @@ yyreduce:
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 110 "compiler.y"
+#line 112 "compiler.y"
     {
 		(yyval).st = create_tree("declaration_list", 2, -1, (yyvsp[(1) - (2)]).st, (yyvsp[(2) - (2)]).st);
 		(yyval).st->nodeType = "DECLARATION";
@@ -1549,7 +1551,7 @@ yyreduce:
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 115 "compiler.y"
+#line 117 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1558,7 +1560,7 @@ yyreduce:
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 121 "compiler.y"
+#line 123 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1567,7 +1569,7 @@ yyreduce:
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 125 "compiler.y"
+#line 127 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1576,7 +1578,7 @@ yyreduce:
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 129 "compiler.y"
+#line 131 "compiler.y"
     {
 		//TODO
 		(yyval).st = (yyvsp[(1) - (1)]).st;
@@ -1586,7 +1588,7 @@ yyreduce:
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 136 "compiler.y"
+#line 138 "compiler.y"
     {
 		(yyval).st = create_tree("var_declaration", 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(2) - (3)]).st);
 		(yyval).st->nodeType = "VAR_DECLARATION";
@@ -1596,13 +1598,14 @@ yyreduce:
 		resState = symTable.insertSymbol((yyvsp[(2) - (3)]).st->nodeName, (yyvsp[(1) - (3)]).st->nodeName);
 		if(resState == -1){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " variable " << (yyvsp[(2) - (3)]).st->nodeName << " has been defined." << endl; 
+			has_error = true;
 		}
 	}
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 147 "compiler.y"
+#line 150 "compiler.y"
     {
 		//TODO
 		(yyval).st = create_tree("var_declaration_with_initial", 3, -1, (yyvsp[(1) - (5)]).st, (yyvsp[(2) - (5)]).st, (yyvsp[(4) - (5)]).st);
@@ -1613,17 +1616,21 @@ yyreduce:
 		resState = symTable.insertSymbol((yyvsp[(2) - (5)]).st->nodeName, (yyvsp[(1) - (5)]).st->nodeName);
 		if(resState == -1){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " variable " << (yyvsp[(2) - (5)]).st->nodeName << " has been defined." << endl; 
+			has_error = true;
 		}
 		else{
 			//check type
 			if((yyvsp[(1) - (5)]).st->nodeName =="CHAR" && (yyvsp[(4) - (5)]).type == "INT"){
 				cout << "[Compile Warning] Line:" << (yyval).lineNo << " Initialize a char with a constant int which may be out of char range. " << endl;
+				has_error = true;
 			}
 			else if((yyvsp[(1) - (5)]).st->nodeName == "DOUBLE" && (yyvsp[(4) - (5)]).type == "INT"){
 				cout << "[Compile Warning] Line:" << (yyval).lineNo << " Initialize a double with a int, append a dot to parse a const int to double." << endl;
+				has_error = true;
 			}
 			else if((yyvsp[(1) - (5)]).st->nodeName != (yyvsp[(4) - (5)]).type){
 				cout << "[Compile Error] Line:" << (yyval).lineNo << " initializer should be type " << (yyvsp[(1) - (5)]).st->nodeName << " but not " << (yyvsp[(4) - (5)]).type << endl; 
+				has_error = true;
 			}
 		}	
 	}
@@ -1631,7 +1638,7 @@ yyreduce:
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 171 "compiler.y"
+#line 178 "compiler.y"
     {
 		(yyval).st = create_tree("var_declaration", 3, -1, (yyvsp[(1) - (6)]).st, (yyvsp[(2) - (6)]).st, (yyvsp[(4) - (6)]).st);
 		(yyval).st->nodeType = "VAR_ARRAY_DECLARATION";
@@ -1640,13 +1647,14 @@ yyreduce:
 		resState = symTable.insertSymbol((yyvsp[(2) - (6)]).st->nodeName, (yyvsp[(1) - (6)]).st->nodeName+"*");
 		if(resState == -1){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " variable " << (yyvsp[(2) - (6)]).st->nodeName << " has been defined." << endl; 
+			has_error = true;
 		}
 	}
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 183 "compiler.y"
+#line 191 "compiler.y"
     {
 		(yyval).st = create_tree("INT", 0, -1);
 		(yyval).st->nodeType = "TYPE";
@@ -1656,7 +1664,7 @@ yyreduce:
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 188 "compiler.y"
+#line 196 "compiler.y"
     {
 		(yyval).st = create_tree("VOID", 0, -1);
 		(yyval).st->nodeType = "TYPE";
@@ -1666,7 +1674,7 @@ yyreduce:
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 193 "compiler.y"
+#line 201 "compiler.y"
     {
 		(yyval).st = create_tree("BOOL", 0, -1);
 		(yyval).st->nodeType = "TYPE";
@@ -1676,7 +1684,7 @@ yyreduce:
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 198 "compiler.y"
+#line 206 "compiler.y"
     {
 		(yyval).st = create_tree("DOUBLE", 0, -1);
 		(yyval).st->nodeType = "TYPE";
@@ -1686,7 +1694,7 @@ yyreduce:
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 203 "compiler.y"
+#line 211 "compiler.y"
     {
 		(yyval).st = create_tree("CHAR", 0, -1);
 		(yyval).st->nodeType = "TYPE";
@@ -1696,7 +1704,7 @@ yyreduce:
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 210 "compiler.y"
+#line 218 "compiler.y"
     {
 		//TODO
 		(yyval).st = create_tree("fun_declaration", 3, -1, (yyvsp[(1) - (7)]).st, (yyvsp[(2) - (7)]).st, (yyvsp[(5) - (7)]).st);
@@ -1706,6 +1714,7 @@ yyreduce:
 		resState = symTable.insertSymbol((yyvsp[(2) - (7)]).st->nodeName, (yyvsp[(1) - (7)]).st->nodeName + " " + (yyvsp[(5) - (7)]).funcParas);
 		if(resState == -1){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " function " << (yyvsp[(2) - (7)]).st->nodeName << " has been declared." << endl; 
+			has_error = true;
 		}
 		else{
 			funcDefined[(yyvsp[(2) - (7)]).st->nodeName]=false;
@@ -1716,7 +1725,7 @@ yyreduce:
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 227 "compiler.y"
+#line 236 "compiler.y"
     {
 		(yyval).st = create_tree("fun_definition", 4, -1, (yyvsp[(1) - (7)]).st, (yyvsp[(2) - (7)]).st, (yyvsp[(5) - (7)]).st, (yyvsp[(7) - (7)]).st);
 		(yyval).st->nodeType = "FUN_DEFINITION";
@@ -1725,22 +1734,25 @@ yyreduce:
 		resState = symTable.insertSymbol((yyvsp[(2) - (7)]).st->nodeName, (yyvsp[(1) - (7)]).st->nodeName + " " + (yyvsp[(5) - (7)]).funcParas);
 		if(resState == -1 && funcDefined[(yyvsp[(2) - (7)]).st->nodeName] == true){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " function " << (yyvsp[(2) - (7)]).st->nodeName << " has been defined." << endl; 
+			has_error = true;
 		}
 		
 		funcDefined[(yyvsp[(2) - (7)]).st->nodeName]=true;
 		
 		if((yyvsp[(7) - (7)]).type == "STATEMENT" && (yyvsp[(1) - (7)]).st->nodeName!="VOID"){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " a return statement is expected." << endl; 
+			has_error = true;
 		}
 		else if((yyvsp[(7) - (7)]).type != (yyvsp[(1) - (7)]).st->nodeName){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " return value type(" << (yyvsp[(7) - (7)]).type <<") in statement is not " << (yyvsp[(1) - (7)]).st->nodeName << endl; 
+			has_error = true;
 		}
 	}
     break;
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 249 "compiler.y"
+#line 261 "compiler.y"
     {
 		isFuncStatement = 1;
 	}
@@ -1748,7 +1760,7 @@ yyreduce:
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 254 "compiler.y"
+#line 266 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1759,7 +1771,7 @@ yyreduce:
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 260 "compiler.y"
+#line 272 "compiler.y"
     {
 		(yyval).st = create_tree("VOID", 0, -1);
 		(yyval).st->nodeType = "VOID";
@@ -1772,7 +1784,7 @@ yyreduce:
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 270 "compiler.y"
+#line 282 "compiler.y"
     {
 		(yyval).st = create_tree("params_list", 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(3) - (3)]).st);
 		(yyval).st->nodeType = "PARAMS";
@@ -1784,7 +1796,7 @@ yyreduce:
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 277 "compiler.y"
+#line 289 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1795,7 +1807,7 @@ yyreduce:
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 285 "compiler.y"
+#line 297 "compiler.y"
     {
 		(yyval).st = create_tree("param", 2, -1, (yyvsp[(1) - (2)]).st, (yyvsp[(2) - (2)]).st);
 		(yyval).st->nodeType = "PARAM";
@@ -1809,7 +1821,7 @@ yyreduce:
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 294 "compiler.y"
+#line 306 "compiler.y"
     {
 		(yyval).st = create_tree("param_array", 2, -1, (yyvsp[(1) - (4)]).st, (yyvsp[(2) - (4)]).st);
 		(yyvsp[(1) - (4)]).st->nodeName = (yyvsp[(1) - (4)]).st->nodeName + "*"; 
@@ -1824,7 +1836,7 @@ yyreduce:
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 306 "compiler.y"
+#line 318 "compiler.y"
     {
 		(yyval).st = create_tree("compound_stmt",2,-1,(yyvsp[(2) - (4)]).st,(yyvsp[(3) - (4)]).st);
 		(yyval).st->nodeType = "COM_STATEMENTS";
@@ -1836,7 +1848,7 @@ yyreduce:
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 315 "compiler.y"
+#line 327 "compiler.y"
     {
 		symTable.createTable();
 		
@@ -1845,6 +1857,7 @@ yyreduce:
 				resState = symTable.insertSymbol(funcPaNames[i], funcPaTypes[i]);
 				if(resState == -1){
 					cout << "[Compile Error] Line:" << (yyvsp[(1) - (1)]).lineNo << " function parameters name should be different." << endl; 
+					has_error = true;
 				}
 			}
 			int parasCount = funcPaTypes.size();
@@ -1860,7 +1873,7 @@ yyreduce:
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 336 "compiler.y"
+#line 349 "compiler.y"
     {
 		symTable.deleteTable();
 	}
@@ -1868,7 +1881,7 @@ yyreduce:
 
   case 28:
 /* Line 1792 of yacc.c  */
-#line 340 "compiler.y"
+#line 353 "compiler.y"
     {
 		(yyval).st = NULL;
 	}
@@ -1876,7 +1889,7 @@ yyreduce:
 
   case 29:
 /* Line 1792 of yacc.c  */
-#line 343 "compiler.y"
+#line 356 "compiler.y"
     {
 		(yyval).st = create_tree("local_declarations",2,-1,(yyvsp[(1) - (2)]).st,(yyvsp[(2) - (2)]).st);
 		(yyval).st->nodeType = "DECLARATION";
@@ -1886,7 +1899,7 @@ yyreduce:
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 349 "compiler.y"
+#line 362 "compiler.y"
     {
 		(yyval).st = NULL;
 		
@@ -1896,7 +1909,7 @@ yyreduce:
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 354 "compiler.y"
+#line 367 "compiler.y"
     {
 		(yyval).st = create_tree("statement_list",2,-1,(yyvsp[(1) - (2)]).st,(yyvsp[(2) - (2)]).st);
 		(yyval).st->nodeType = "STATEMENTS";
@@ -1905,6 +1918,7 @@ yyreduce:
 		if((yyvsp[(1) - (2)]).type != "STATEMENT" && (yyvsp[(2) - (2)]).type != "STATEMENT"){
 			if((yyvsp[(1) - (2)]).type != (yyvsp[(2) - (2)]).type){
 				cout << "[Compile Error] Line:" << (yyvsp[(2) - (2)]).lineNo << " there exist two return statement with different value." << endl; 
+				has_error = true;
 				(yyval).type = (yyvsp[(1) - (2)]).type; 
 			}
 			else{
@@ -1925,7 +1939,7 @@ yyreduce:
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 380 "compiler.y"
+#line 394 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1937,7 +1951,7 @@ yyreduce:
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 387 "compiler.y"
+#line 401 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1948,7 +1962,7 @@ yyreduce:
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 393 "compiler.y"
+#line 407 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1959,7 +1973,7 @@ yyreduce:
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 399 "compiler.y"
+#line 413 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1970,7 +1984,7 @@ yyreduce:
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 405 "compiler.y"
+#line 419 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -1981,7 +1995,7 @@ yyreduce:
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 413 "compiler.y"
+#line 427 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (2)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (2)]).lineNo;
@@ -1990,13 +2004,13 @@ yyreduce:
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 417 "compiler.y"
+#line 431 "compiler.y"
     {(yyval).st = NULL;(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;}
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 420 "compiler.y"
+#line 434 "compiler.y"
     {
 		//deadcode detecting
 		if((yyvsp[(3) - (5)]).st->nodeName == "true" && (yyvsp[(3) - (5)]).st->nodeType == "CONSTANT"){
@@ -2014,6 +2028,7 @@ yyreduce:
 		
 		if((yyvsp[(3) - (5)]).type != "BOOL"){
 			cout << "[Compile Error] Line:" << (yyvsp[(3) - (5)]).lineNo << " the value of the branch condition should be a bool" << endl; 
+			has_error = true;
 		}
 		(yyval).type = (yyvsp[(5) - (5)]).type;
 	}
@@ -2021,7 +2036,7 @@ yyreduce:
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 440 "compiler.y"
+#line 455 "compiler.y"
     {
 		//deadcode detecting
 		if((yyvsp[(3) - (7)]).st->nodeName == "true" && (yyvsp[(3) - (7)]).st->nodeType == "CONSTANT"){
@@ -2038,11 +2053,13 @@ yyreduce:
 		
 		if((yyvsp[(3) - (7)]).type != "BOOL"){
 			cout << "[Compile Error] Line:" << (yyvsp[(3) - (7)]).lineNo << " the value of the branch condition should be a bool" << endl; 
+			has_error = true;
 		}
 		
 		if((yyvsp[(5) - (7)]).type != "STATEMENT" && (yyvsp[(7) - (7)]).type != "STATEMENT"){
 			if((yyvsp[(5) - (7)]).type != (yyvsp[(7) - (7)]).type){
 				cout << "[Compile Error] Line:" << (yyvsp[(5) - (7)]).lineNo << " there exist two return statement with different value." << endl; 
+				has_error = true;
 				(yyval).type = (yyvsp[(5) - (7)]).type; 
 			}
 			else{
@@ -2063,7 +2080,7 @@ yyreduce:
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 479 "compiler.y"
+#line 496 "compiler.y"
     {
 		(yyval).st = create_tree("WHILE", 2, -1, (yyvsp[(3) - (5)]).st, (yyvsp[(5) - (5)]).st);
 		(yyval).st->nodeType = "WHILE";
@@ -2071,6 +2088,7 @@ yyreduce:
 		
 		if((yyvsp[(3) - (5)]).type != "BOOL"){
 			cout << "[Compile Error] Line:" << (yyvsp[(3) - (5)]).lineNo << " the value of the branch condition should be a bool" << endl; 
+			has_error = true;
 		}
 		
 		(yyval).type = (yyvsp[(5) - (5)]).type;
@@ -2079,7 +2097,7 @@ yyreduce:
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 492 "compiler.y"
+#line 510 "compiler.y"
     {
 		(yyval).st = create_tree("RETURN", 0, -1);
 		(yyval).st->nodeType = "RETURN";
@@ -2091,7 +2109,7 @@ yyreduce:
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 499 "compiler.y"
+#line 517 "compiler.y"
     {
 		(yyval).st = create_tree("RETURN", 1, -1, (yyvsp[(2) - (3)]).st);
 		(yyval).st->nodeType = "RETURN";
@@ -2103,14 +2121,15 @@ yyreduce:
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 508 "compiler.y"
+#line 526 "compiler.y"
     {
 		(yyval).st = create_tree("=", 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(3) - (3)]).st);
 		(yyval).st->nodeType = "ASSIGNMENT";
 		(yyval).lineNo = (yyvsp[(1) - (3)]).lineNo;
 		
-		if((yyvsp[(1) - (3)]).type != (yyvsp[(3) - (3)]).type){
+		if((yyvsp[(3) - (3)]).type != "READ_RETURN_TYPE" && (yyvsp[(1) - (3)]).type != (yyvsp[(3) - (3)]).type){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " type " << (yyvsp[(3) - (3)]).type << " cannot assigned to variable " << (yyvsp[(1) - (3)]).st->nodeName << endl; 
+			has_error = true;
 			(yyval).type = "UNDEFINED";
 		}
 		else{
@@ -2121,7 +2140,7 @@ yyreduce:
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 521 "compiler.y"
+#line 540 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2132,7 +2151,7 @@ yyreduce:
 
   case 46:
 /* Line 1792 of yacc.c  */
-#line 529 "compiler.y"
+#line 548 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).st->varType=symTable.getSymbolType((yyval).st->nodeName);
@@ -2142,6 +2161,7 @@ yyreduce:
 		resState = symTable.findSymbol((yyvsp[(1) - (1)]).st->nodeName);
 		if(resState == 0){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " variable " << (yyvsp[(1) - (1)]).st->nodeName << " is not defined." << endl; 
+			has_error = true;
 			(yyval).type = "UNDEFINED";
 		}
 		else{
@@ -2152,7 +2172,7 @@ yyreduce:
 
   case 47:
 /* Line 1792 of yacc.c  */
-#line 544 "compiler.y"
+#line 564 "compiler.y"
     {
 		(yyval).st = create_tree((yyvsp[(1) - (4)]).st->nodeName, 2, -1, (yyvsp[(1) - (4)]).st, (yyvsp[(3) - (4)]).st);
 		(yyval).st->nodeType = "ARRAY";
@@ -2165,6 +2185,7 @@ yyreduce:
 		resState = symTable.findSymbol((yyvsp[(1) - (4)]).st->nodeName);
 		if(resState == 0){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " variable " << (yyvsp[(1) - (4)]).st->nodeName << " is not defined." << endl; 
+			has_error = true;
 			(yyval).type = "UNDEFINED";
 		}
 		else{
@@ -2173,6 +2194,7 @@ yyreduce:
 			
 			if(buff[buff.size()-1] != '*'){
 				cout << "[Compile Error] Line:" << (yyval).lineNo << " variable " << (yyvsp[(1) - (4)]).st->nodeName << " is not array type." << endl; 
+				has_error = true;
 				(yyval).type = buff;
 			}
 			else{
@@ -2182,13 +2204,14 @@ yyreduce:
 		
 		if((yyvsp[(3) - (4)]).type != "INT"){
 				cout << "[Compile Error] Line:" << (yyval).lineNo << " array index type should be int but not " << (yyvsp[(3) - (4)]).type << endl; 
+				has_error = true;
 		}
 	}
     break;
 
   case 48:
 /* Line 1792 of yacc.c  */
-#line 577 "compiler.y"
+#line 600 "compiler.y"
     {
 		//const fold
 		if((yyvsp[(1) - (3)]).st->nodeType == "CONSTANT" && (yyvsp[(3) - (3)]).st->nodeType == "CONSTANT"){
@@ -2213,6 +2236,7 @@ yyreduce:
 		
 		if((yyvsp[(1) - (3)]).type != (yyvsp[(3) - (3)]).type){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " REL_OP cannot operate on type " << (yyvsp[(1) - (3)]).type << " and type " << (yyvsp[(3) - (3)]).type << endl;
+			has_error = true;
 			(yyval).type = "UNDEFINED"; 
 		}
 		else{
@@ -2223,7 +2247,7 @@ yyreduce:
 
   case 49:
 /* Line 1792 of yacc.c  */
-#line 607 "compiler.y"
+#line 631 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2234,7 +2258,7 @@ yyreduce:
 
   case 50:
 /* Line 1792 of yacc.c  */
-#line 615 "compiler.y"
+#line 639 "compiler.y"
     {
 		//const fold
 		if((yyvsp[(1) - (3)]).st->nodeType == "CONSTANT" && (yyvsp[(3) - (3)]).st->nodeType == "CONSTANT"){
@@ -2259,6 +2283,7 @@ yyreduce:
 		
 		if((yyvsp[(1) - (3)]).type != (yyvsp[(3) - (3)]).type){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " ADD_OP cannot operate on type " << (yyvsp[(1) - (3)]).type << " and type " << (yyvsp[(3) - (3)]).type << endl;
+			has_error = true;
 			(yyval).type = "UNDEFINED"; 
 		}
 		else{
@@ -2269,7 +2294,7 @@ yyreduce:
 
   case 51:
 /* Line 1792 of yacc.c  */
-#line 645 "compiler.y"
+#line 670 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2280,7 +2305,7 @@ yyreduce:
 
   case 52:
 /* Line 1792 of yacc.c  */
-#line 653 "compiler.y"
+#line 678 "compiler.y"
     {
 		//const fold
 		if((yyvsp[(1) - (3)]).st->nodeType == "CONSTANT" && (yyvsp[(3) - (3)]).st->nodeType == "CONSTANT"){
@@ -2306,6 +2331,7 @@ yyreduce:
 		//type check
 		if((yyvsp[(1) - (3)]).type != (yyvsp[(3) - (3)]).type){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " MUL_OP cannot operate on type " << (yyvsp[(1) - (3)]).type << " and type " << (yyvsp[(3) - (3)]).type << endl;
+			has_error = true;
 			(yyval).type = "UNDEFINED"; 
 		}
 		else{
@@ -2316,7 +2342,7 @@ yyreduce:
 
   case 53:
 /* Line 1792 of yacc.c  */
-#line 684 "compiler.y"
+#line 710 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2327,7 +2353,7 @@ yyreduce:
 
   case 54:
 /* Line 1792 of yacc.c  */
-#line 692 "compiler.y"
+#line 718 "compiler.y"
     {
 		(yyval).st = (yyvsp[(2) - (3)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (3)]).lineNo;
@@ -2338,7 +2364,7 @@ yyreduce:
 
   case 55:
 /* Line 1792 of yacc.c  */
-#line 698 "compiler.y"
+#line 724 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2349,7 +2375,7 @@ yyreduce:
 
   case 56:
 /* Line 1792 of yacc.c  */
-#line 704 "compiler.y"
+#line 730 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2360,7 +2386,7 @@ yyreduce:
 
   case 57:
 /* Line 1792 of yacc.c  */
-#line 710 "compiler.y"
+#line 736 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;	
@@ -2370,7 +2396,7 @@ yyreduce:
 
   case 58:
 /* Line 1792 of yacc.c  */
-#line 715 "compiler.y"
+#line 741 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;	
@@ -2380,7 +2406,7 @@ yyreduce:
 
   case 59:
 /* Line 1792 of yacc.c  */
-#line 720 "compiler.y"
+#line 746 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;	
@@ -2390,19 +2416,46 @@ yyreduce:
 
   case 60:
 /* Line 1792 of yacc.c  */
-#line 727 "compiler.y"
+#line 753 "compiler.y"
     {
 		(yyval).st = create_tree("call", 2, -1, (yyvsp[(1) - (4)]).st, (yyvsp[(3) - (4)]).st);
 		(yyval).st->nodeType = "FUN_CALL";
 		(yyval).lineNo = (yyvsp[(1) - (4)]).lineNo;
 		
 		resState = symTable.findSymbol((yyvsp[(1) - (4)]).st->nodeName);
-		if(resState == 0){
+		if((yyvsp[(1) - (4)]).st->nodeName == "read"){
+			if((yyvsp[(3) - (4)]).type != "VOID"){
+				cout << "[Compile Error] Line:" << (yyval).lineNo << " read function takes no arguments! " << endl; 
+				has_error = true;
+			}
+			(yyval).type = "READ_RETURN_TYPE";
+		}
+		else if((yyvsp[(1) - (4)]).st->nodeName == "print"){
+			(yyval).type = "PRINT_RETURN_TYPE";
+			vector<string> splitArgs;
+			SplitString((yyvsp[(3) - (4)]).type,splitArgs," ");
+			if(splitArgs.size() != 1 || (yyvsp[(3) - (4)]).type == "VOID"){
+				cout << "[Compile Error] Line:" << (yyval).lineNo << " print function must take one and only one argument one time. " << endl; 
+				has_error = true;
+			}
+			else{
+				for(int i = 0;i < splitArgs.size(); i++){
+					if(splitArgs[i] != "INT" && splitArgs[i] != "DOUBLE" && splitArgs[i] != "CHAR"){
+						cout << "[Compile Error] Line:" << (yyval).lineNo << " print function can only take int, double or char argument. "<< endl; 
+						has_error = true;
+						break;
+					}
+				}
+			}
+		}
+		else if(resState == 0){
 			cout << "[Compile Error] Line:" << (yyval).lineNo << " function " << (yyvsp[(1) - (4)]).st->nodeName << " is not declared." << endl; 
+			has_error = true;
 			(yyval).type = "UNDEFINED"; 
 		}
 		else if(funcDefined.find((yyvsp[(1) - (4)]).st->nodeName) == funcDefined.end()){
 			cout << "[Compile Error] Line:" << (yyval).lineNo  << " "<< (yyvsp[(1) - (4)]).st->nodeName << " is not a function." << endl; 
+			has_error = true;
 			(yyval).type = "UNDEFINED"; 
 		}
 		else{
@@ -2410,6 +2463,7 @@ yyreduce:
 			
 			if(funcDefined[(yyvsp[(1) - (4)]).st->nodeName] == false){
 				cout << "[Compile Error] Line:" << (yyval).lineNo << " function " << (yyvsp[(1) - (4)]).st->nodeName << " is not defined." << endl; 
+				has_error = true;
 			}
 			
 			vector<string> splitType;
@@ -2421,11 +2475,13 @@ yyreduce:
 			if(splitArgs.size() != splitType.size() - 1){
 				cout << "[Debug Message] Line:" << (yyval).lineNo << " " << resType << " || " << (yyvsp[(3) - (4)]).type << endl; 
 				cout << "[Compile Error] Line:" << (yyval).lineNo << " the number of the parameters does not match the defination of the " << (yyvsp[(1) - (4)]).st->nodeName << endl; 
+				has_error = true;
 			}
 			else{
 				for(int i = 0;i < splitArgs.size(); i++){
 					if(splitArgs[i] != splitType[i+1]){
 						cout << "[Compile Error] Line:" << (yyval).lineNo << " the " << i << "th parameter should be " << splitType[i+1] << " but not " << splitArgs[i] << endl; 
+						has_error = true;
 						break;
 					}
 				}
@@ -2437,7 +2493,7 @@ yyreduce:
 
   case 61:
 /* Line 1792 of yacc.c  */
-#line 770 "compiler.y"
+#line 826 "compiler.y"
     {
 		(yyval).st = create_tree("NO_ARGS", 0, -1);
 		(yyval).st->nodeType = "ARGS";
@@ -2447,7 +2503,7 @@ yyreduce:
 
   case 62:
 /* Line 1792 of yacc.c  */
-#line 775 "compiler.y"
+#line 831 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2458,7 +2514,7 @@ yyreduce:
 
   case 63:
 /* Line 1792 of yacc.c  */
-#line 783 "compiler.y"
+#line 839 "compiler.y"
     {
 		(yyval).st = create_tree("arg_list", 2, -1, (yyvsp[(1) - (3)]).st, (yyvsp[(3) - (3)]).st);
 		(yyval).st->nodeType = "ARGS";
@@ -2470,7 +2526,7 @@ yyreduce:
 
   case 64:
 /* Line 1792 of yacc.c  */
-#line 790 "compiler.y"
+#line 846 "compiler.y"
     {
 		(yyval).st = (yyvsp[(1) - (1)]).st;
 		(yyval).lineNo = (yyvsp[(1) - (1)]).lineNo;
@@ -2481,7 +2537,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 2485 "compiler.tab.c"
+#line 2541 "compiler.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2713,7 +2769,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 797 "compiler.y"
+#line 853 "compiler.y"
 
 void yyerror(char const *s)
 {
@@ -2729,17 +2785,17 @@ int main(int argc,char* argv[]) {
 	
 	yyparse();
 	
-	root->printTree2(0);
+	//root->printTree2(0);
 	
 	ofstream out("a.gv");
 	out << "digraph AST {" << endl;
 	DrawTree(out, root, NULL, 0);
 	out << "}" << endl;
 	out.close();
-
-	interRepre IR = interRepre(root);
-	IR.print_code();
-
+	if(!has_error){
+		interRepre IR = interRepre(root);
+		IR.print_code();
+	}
 	fclose(yyin);
 	return 0;
 }

@@ -6,6 +6,7 @@
 #include "table.h"
 #include "draw.h" 
 #include "interRepre.h"
+ 
 using namespace std;
 
 extern char *yytext;
@@ -20,6 +21,7 @@ vector<string> funcPaTypes;// buffer of the parameters of the function, used to 
 vector<string> funcPaNames;// buffer of the parameters of the function, used to insert paras into tables when function declaration
 int isFuncStatement = 0;//to show if a compound statement belongs to a function delaration, which compiler need to add the parameters into the symbol table 
 map<string,bool> funcDefined;//to show a function is defined or not
+bool has_error = false;
 
 int yylex(void);
 void yyerror(const char*); 
@@ -142,6 +144,7 @@ var_declaration:
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName);
 		if(resState == -1){
 			cout << "[Compile Error] Line:" << $$.lineNo << " variable " << $2.st->nodeName << " has been defined." << endl; 
+			has_error = true;
 		}
 	}
 	| type_specifier IDENTIFIER '=' simple_expression ';' {
@@ -154,17 +157,21 @@ var_declaration:
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName);
 		if(resState == -1){
 			cout << "[Compile Error] Line:" << $$.lineNo << " variable " << $2.st->nodeName << " has been defined." << endl; 
+			has_error = true;
 		}
 		else{
 			//check type
 			if($1.st->nodeName =="CHAR" && $4.type == "INT"){
 				cout << "[Compile Warning] Line:" << $$.lineNo << " Initialize a char with a constant int which may be out of char range. " << endl;
+				has_error = true;
 			}
 			else if($1.st->nodeName == "DOUBLE" && $4.type == "INT"){
 				cout << "[Compile Warning] Line:" << $$.lineNo << " Initialize a double with a int, append a dot to parse a const int to double." << endl;
+				has_error = true;
 			}
 			else if($1.st->nodeName != $4.type){
 				cout << "[Compile Error] Line:" << $$.lineNo << " initializer should be type " << $1.st->nodeName << " but not " << $4.type << endl; 
+				has_error = true;
 			}
 		}	
 	}
@@ -176,6 +183,7 @@ var_declaration:
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName+"*");
 		if(resState == -1){
 			cout << "[Compile Error] Line:" << $$.lineNo << " variable " << $2.st->nodeName << " has been defined." << endl; 
+			has_error = true;
 		}
 	};
 
@@ -216,6 +224,7 @@ fun_declaration:
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName + " " + $5.funcParas);
 		if(resState == -1){
 			cout << "[Compile Error] Line:" << $$.lineNo << " function " << $2.st->nodeName << " has been declared." << endl; 
+			has_error = true;
 		}
 		else{
 			funcDefined[$2.st->nodeName]=false;
@@ -232,15 +241,18 @@ fun_definition:
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName + " " + $5.funcParas);
 		if(resState == -1 && funcDefined[$2.st->nodeName] == true){
 			cout << "[Compile Error] Line:" << $$.lineNo << " function " << $2.st->nodeName << " has been defined." << endl; 
+			has_error = true;
 		}
 		
 		funcDefined[$2.st->nodeName]=true;
 		
 		if($7.type == "STATEMENT" && $1.st->nodeName!="VOID"){
 			cout << "[Compile Error] Line:" << $$.lineNo << " a return statement is expected." << endl; 
+			has_error = true;
 		}
 		else if($7.type != $1.st->nodeName){
 			cout << "[Compile Error] Line:" << $$.lineNo << " return value type(" << $7.type <<") in statement is not " << $1.st->nodeName << endl; 
+			has_error = true;
 		}
 	};
 
@@ -320,6 +332,7 @@ compound_stmt_start:
 				resState = symTable.insertSymbol(funcPaNames[i], funcPaTypes[i]);
 				if(resState == -1){
 					cout << "[Compile Error] Line:" << $1.lineNo << " function parameters name should be different." << endl; 
+					has_error = true;
 				}
 			}
 			int parasCount = funcPaTypes.size();
@@ -359,6 +372,7 @@ statement_list: /*可为空*/{
 		if($1.type != "STATEMENT" && $2.type != "STATEMENT"){
 			if($1.type != $2.type){
 				cout << "[Compile Error] Line:" << $2.lineNo << " there exist two return statement with different value." << endl; 
+				has_error = true;
 				$$.type = $1.type; 
 			}
 			else{
@@ -434,6 +448,7 @@ selection_stmt:
 		
 		if($3.type != "BOOL"){
 			cout << "[Compile Error] Line:" << $3.lineNo << " the value of the branch condition should be a bool" << endl; 
+			has_error = true;
 		}
 		$$.type = $5.type;
 	}
@@ -453,11 +468,13 @@ selection_stmt:
 		
 		if($3.type != "BOOL"){
 			cout << "[Compile Error] Line:" << $3.lineNo << " the value of the branch condition should be a bool" << endl; 
+			has_error = true;
 		}
 		
 		if($5.type != "STATEMENT" && $7.type != "STATEMENT"){
 			if($5.type != $7.type){
 				cout << "[Compile Error] Line:" << $5.lineNo << " there exist two return statement with different value." << endl; 
+				has_error = true;
 				$$.type = $5.type; 
 			}
 			else{
@@ -483,6 +500,7 @@ iteration_stmt:
 		
 		if($3.type != "BOOL"){
 			cout << "[Compile Error] Line:" << $3.lineNo << " the value of the branch condition should be a bool" << endl; 
+			has_error = true;
 		}
 		
 		$$.type = $5.type;
@@ -510,8 +528,9 @@ expression:
 		$$.st->nodeType = "ASSIGNMENT";
 		$$.lineNo = $1.lineNo;
 		
-		if($1.type != $3.type){
+		if($3.type != "READ_RETURN_TYPE" && $1.type != $3.type){
 			cout << "[Compile Error] Line:" << $$.lineNo << " type " << $3.type << " cannot assigned to variable " << $1.st->nodeName << endl; 
+			has_error = true;
 			$$.type = "UNDEFINED";
 		}
 		else{
@@ -535,6 +554,7 @@ var:
 		resState = symTable.findSymbol($1.st->nodeName);
 		if(resState == 0){
 			cout << "[Compile Error] Line:" << $$.lineNo << " variable " << $1.st->nodeName << " is not defined." << endl; 
+			has_error = true;
 			$$.type = "UNDEFINED";
 		}
 		else{
@@ -553,6 +573,7 @@ var:
 		resState = symTable.findSymbol($1.st->nodeName);
 		if(resState == 0){
 			cout << "[Compile Error] Line:" << $$.lineNo << " variable " << $1.st->nodeName << " is not defined." << endl; 
+			has_error = true;
 			$$.type = "UNDEFINED";
 		}
 		else{
@@ -561,6 +582,7 @@ var:
 			
 			if(buff[buff.size()-1] != '*'){
 				cout << "[Compile Error] Line:" << $$.lineNo << " variable " << $1.st->nodeName << " is not array type." << endl; 
+				has_error = true;
 				$$.type = buff;
 			}
 			else{
@@ -570,6 +592,7 @@ var:
 		
 		if($3.type != "INT"){
 				cout << "[Compile Error] Line:" << $$.lineNo << " array index type should be int but not " << $3.type << endl; 
+				has_error = true;
 		}
 	};
 
@@ -598,6 +621,7 @@ simple_expression:
 		
 		if($1.type != $3.type){
 			cout << "[Compile Error] Line:" << $$.lineNo << " REL_OP cannot operate on type " << $1.type << " and type " << $3.type << endl;
+			has_error = true;
 			$$.type = "UNDEFINED"; 
 		}
 		else{
@@ -636,6 +660,7 @@ additive_expression:
 		
 		if($1.type != $3.type){
 			cout << "[Compile Error] Line:" << $$.lineNo << " ADD_OP cannot operate on type " << $1.type << " and type " << $3.type << endl;
+			has_error = true;
 			$$.type = "UNDEFINED"; 
 		}
 		else{
@@ -675,6 +700,7 @@ term:
 		//type check
 		if($1.type != $3.type){
 			cout << "[Compile Error] Line:" << $$.lineNo << " MUL_OP cannot operate on type " << $1.type << " and type " << $3.type << endl;
+			has_error = true;
 			$$.type = "UNDEFINED"; 
 		}
 		else{
@@ -730,12 +756,39 @@ call:
 		$$.lineNo = $1.lineNo;
 		
 		resState = symTable.findSymbol($1.st->nodeName);
-		if(resState == 0){
+		if($1.st->nodeName == "read"){
+			if($3.type != "VOID"){
+				cout << "[Compile Error] Line:" << $$.lineNo << " read function takes no arguments! " << endl; 
+				has_error = true;
+			}
+			$$.type = "READ_RETURN_TYPE";
+		}
+		else if($1.st->nodeName == "print"){
+			$$.type = "PRINT_RETURN_TYPE";
+			vector<string> splitArgs;
+			SplitString($3.type,splitArgs," ");
+			if(splitArgs.size() != 1 || $3.type == "VOID"){
+				cout << "[Compile Error] Line:" << $$.lineNo << " print function must take one and only one argument one time. " << endl; 
+				has_error = true;
+			}
+			else{
+				for(int i = 0;i < splitArgs.size(); i++){
+					if(splitArgs[i] != "INT" && splitArgs[i] != "DOUBLE" && splitArgs[i] != "CHAR"){
+						cout << "[Compile Error] Line:" << $$.lineNo << " print function can only take int, double or char argument. "<< endl; 
+						has_error = true;
+						break;
+					}
+				}
+			}
+		}
+		else if(resState == 0){
 			cout << "[Compile Error] Line:" << $$.lineNo << " function " << $1.st->nodeName << " is not declared." << endl; 
+			has_error = true;
 			$$.type = "UNDEFINED"; 
 		}
 		else if(funcDefined.find($1.st->nodeName) == funcDefined.end()){
 			cout << "[Compile Error] Line:" << $$.lineNo  << " "<< $1.st->nodeName << " is not a function." << endl; 
+			has_error = true;
 			$$.type = "UNDEFINED"; 
 		}
 		else{
@@ -743,6 +796,7 @@ call:
 			
 			if(funcDefined[$1.st->nodeName] == false){
 				cout << "[Compile Error] Line:" << $$.lineNo << " function " << $1.st->nodeName << " is not defined." << endl; 
+				has_error = true;
 			}
 			
 			vector<string> splitType;
@@ -754,11 +808,13 @@ call:
 			if(splitArgs.size() != splitType.size() - 1){
 				cout << "[Debug Message] Line:" << $$.lineNo << " " << resType << " || " << $3.type << endl; 
 				cout << "[Compile Error] Line:" << $$.lineNo << " the number of the parameters does not match the defination of the " << $1.st->nodeName << endl; 
+				has_error = true;
 			}
 			else{
 				for(int i = 0;i < splitArgs.size(); i++){
 					if(splitArgs[i] != splitType[i+1]){
 						cout << "[Compile Error] Line:" << $$.lineNo << " the " << i << "th parameter should be " << splitType[i+1] << " but not " << splitArgs[i] << endl; 
+						has_error = true;
 						break;
 					}
 				}
@@ -809,17 +865,17 @@ int main(int argc,char* argv[]) {
 	
 	yyparse();
 	
-	root->printTree2(0);
+	//root->printTree2(0);
 	
 	ofstream out("a.gv");
 	out << "digraph AST {" << endl;
 	DrawTree(out, root, NULL, 0);
 	out << "}" << endl;
 	out.close();
-
-	interRepre IR = interRepre(root);
-	IR.print_code();
-
+	if(!has_error){
+		interRepre IR = interRepre(root);
+		IR.print_code();
+	}
 	fclose(yyin);
 	return 0;
 }
