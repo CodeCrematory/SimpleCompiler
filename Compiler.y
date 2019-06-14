@@ -91,7 +91,7 @@ string constFold(string left, string op, string right){
 %}
 
 %token IDENTIFIER CONSTANT_INT CONSTANT_DOUBLE CONSTANT_BOOL
-%token ADD_OP MUL_OP REL_OP
+%token ADD_OP MUL_OP REL_OP BOOL_OP
 %token BOOL INT DOUBLE VOID CHAR
 %token IF ELSE WHILE RETURN
 
@@ -231,11 +231,25 @@ fun_declaration:
 		}
 		
 	};
-
 fun_definition:
-	type_specifier IDENTIFIER '(' para_starts params ')' compound_stmt {
-		$$.st = create_tree("fun_definition", 4, -1, $1.st, $2.st, $5.st, $7.st);
+	fun_definition_head compound_stmt{
+		$$.st = create_tree("fun_definition", 4, -1, $1.st->child[0], $1.st->child[1], $1.st->child[2], $2.st);
 		$$.st->nodeType = "FUN_DEFINITION";
+		$$.lineNo = $1.lineNo;
+
+		if($2.type == "STATEMENT" && $1.st->child[0]->nodeName!="VOID"){
+			cout << "[Compile Error] Line:" << $$.lineNo << " a return statement is expected." << endl; 
+			has_error = true;
+		}
+		else if($2.type != $1.st->child[0]->nodeName){
+			cout << "[Compile Error] Line:" << $$.lineNo << " return value type(" << $2.type <<") in statement is not " << $1.st->child[0]->nodeName << endl; 
+			has_error = true;
+		}
+	};
+
+fun_definition_head:
+	type_specifier IDENTIFIER '(' para_starts params ')'{
+		$$.st = create_tree("fun_definition", 3, -1, $1.st, $2.st, $5.st);
 		$$.lineNo = $1.lineNo;
 		
 		resState = symTable.insertSymbol($2.st->nodeName, $1.st->nodeName + " " + $5.funcParas);
@@ -245,15 +259,7 @@ fun_definition:
 		}
 		
 		funcDefined[$2.st->nodeName]=true;
-		
-		if($7.type == "STATEMENT" && $1.st->nodeName!="VOID"){
-			cout << "[Compile Error] Line:" << $$.lineNo << " a return statement is expected." << endl; 
-			has_error = true;
-		}
-		else if($7.type != $1.st->nodeName){
-			cout << "[Compile Error] Line:" << $$.lineNo << " return value type(" << $7.type <<") in statement is not " << $1.st->nodeName << endl; 
-			has_error = true;
-		}
+	
 	};
 
 para_starts:
@@ -595,8 +601,56 @@ var:
 				has_error = true;
 		}
 	};
-
 simple_expression:
+	relation_expression BOOL_OP relation_expression{
+		//const fold
+		if($1.st->nodeType == "CONSTANT" && $3.st->nodeType == "CONSTANT"){
+			string new_const;
+			if($1.type == "BOOL" && $3.type == "BOOL"){
+				if($2.tokenContent == "||"){
+					if($1.st->nodeName == "true" || $2.st->nodeName == "true")
+						new_const = "true";
+					else 
+						new_const = "false";
+				}
+				else if($2.tokenContent == "&&"){
+					if($1.st->nodeName == "false" || $2.st->nodeName == "false")
+						new_const = "false";
+					else 
+						new_const = "true";
+				}
+			}
+			else{
+				new_const = "true";
+				cout << "[Compile Error] Line:" << $$.lineNo << " BOOL_OP can only operate on bool expressions" << endl;
+				has_error = true;
+			}
+			$$.st = create_tree(new_const,0,-1);
+			$$.st->nodeType = "CONSTANT";
+		}
+		else{
+			$$.st = create_tree($2.tokenContent, 2, -1, $1.st, $3.st);
+			$$.st->nodeType = "OPERATOR";
+		}
+		$$.lineNo = $1.lineNo;
+		
+		if($1.type != $3.type){
+			cout << "[Compile Error] Line:" << $$.lineNo << " BOOL_OP cannot operate on type " << $1.type << " and type " << $3.type << endl;
+			has_error = true;
+			$$.type = "UNDEFINED"; 
+		}
+		else{
+			$$.type = "BOOL";		
+		}
+	}
+	| relation_expression{
+		$$.st = $1.st;
+		$$.lineNo = $1.lineNo;
+		
+		$$.type = $1.type;
+	};
+
+relation_expression:
 	additive_expression REL_OP additive_expression {
 		//const fold
 		if($1.st->nodeType == "CONSTANT" && $3.st->nodeType == "CONSTANT"){

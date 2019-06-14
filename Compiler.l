@@ -45,6 +45,8 @@ L			[a-zA-Z_]
 					yylval.st->nodeType = "CONSTANT";				
 					return(CONSTANT_BOOL); 	}
 
+"||"			{ count(); yylval.lineNo = yylineno; yylval.tokenContent="||";  	return(BOOL_OP); }
+"&&"			{ count(); yylval.lineNo = yylineno; yylval.tokenContent="&&";  	return(BOOL_OP); }
 "+"				{ count(); yylval.lineNo = yylineno; yylval.tokenContent="+";  	return(ADD_OP); }
 "-"				{ count(); yylval.lineNo = yylineno; yylval.tokenContent="-"; 	return(ADD_OP); }
 "*"				{ count(); yylval.lineNo = yylineno; yylval.tokenContent="*"; 	return(MUL_OP); }

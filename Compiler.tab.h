@@ -53,16 +53,17 @@ extern int yydebug;
      ADD_OP = 262,
      MUL_OP = 263,
      REL_OP = 264,
-     BOOL = 265,
-     INT = 266,
-     DOUBLE = 267,
-     VOID = 268,
-     CHAR = 269,
-     IF = 270,
-     ELSE = 271,
-     WHILE = 272,
-     RETURN = 273,
-     LOWER_THAN_ELSE = 274
+     BOOL_OP = 265,
+     BOOL = 266,
+     INT = 267,
+     DOUBLE = 268,
+     VOID = 269,
+     CHAR = 270,
+     IF = 271,
+     ELSE = 272,
+     WHILE = 273,
+     RETURN = 274,
+     LOWER_THAN_ELSE = 275
    };
 #endif
 

@@ -1,9 +1,9 @@
 int sort(int arg){
 	//mao pao pai xu
-	int a[10];
+	double a[10];
 	int i=0;
 	int j=0;
-	int temp;
+	double temp;
 	while(i<10){
 		while(j<10-i-1){
 			if(a[j]>a[j+1]){
@@ -25,5 +25,28 @@ int fact(int base){
 	}
 	else{
 		return base*fact(base-1);
+	}
+}
+
+double f(double x){
+	return x*x-2.0;
+}
+
+double eps;
+int max_depth;
+
+double find_zero(double a, double b, int depth){
+	double mid = (a+b)/2.0;
+	double f_a=f(a);
+	double f_b=f(b);
+	double f_mid=f(mid);
+	if(f_mid < eps || depth >= max_depth){
+		return mid;
+	}
+	if(f_a*f_mid >= 0){
+		return find_zero(mid,b,depth+1);
+	}
+	else{
+		return find_zero(a,mid,depth+1);
 	}
 }

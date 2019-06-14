@@ -1,8 +1,11 @@
 bool test_const = 1+2+3 > 3+2+1;
 int a;
+int b;
+int c;
+int d;
 int main(int arg){
 	int b;
-	if(test_const){
+	if(false || true){
 		a=1;
 	}
 	else{
