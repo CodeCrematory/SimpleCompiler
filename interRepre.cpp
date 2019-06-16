@@ -151,6 +151,7 @@ void interRepre::gen_code(treeNode* node){
                  * op(entry) res(ID)
                  * call gen_code (params/param/void)
                  * call gen_code (com_statement)
+                 * op(func_end) res(ID)
                 **/
                 assert(node->child.size() == 4);
                 
@@ -162,6 +163,10 @@ void interRepre::gen_code(treeNode* node){
                 gen_code(node->child[2]);
                 // com_statement
                 gen_code(node->child[3]);
+                // op(func_end) res(ID)
+                op = "func_end";
+                res = gen_exp(node->child[1]); // ID
+                add_code(op, arg1, arg2, res);
                 break;
 
             case PARAMS:
